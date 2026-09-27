@@ -15,6 +15,7 @@
 set -e
 
 node scripts/validate-knowledge.js
+node scripts/check-knowledge-consistency.js
 node scripts/check-twin-grounding.js
 node scripts/check-fallback.js
 node scripts/test-twin-engine.js

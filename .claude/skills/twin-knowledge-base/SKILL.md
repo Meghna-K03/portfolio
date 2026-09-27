@@ -115,6 +115,9 @@ Field rules (both shapes):
 - For a project entry, a keyword that's also a distinguishing fact (e.g.
   "ocr", "anomaly detection") lets a logical question like "which project
   uses OCR?" resolve straight to that project. That's fine and intended.
+- Don't reuse a keyword another entry already declares — run
+  `npm run check:consistency` after adding keywords to catch this
+  automatically rather than reading every existing entry by hand.
 
 ## Choosing topics
 
@@ -165,12 +168,31 @@ touch the engine itself for a new project or fact.
 1. Run `npm run validate:knowledge` — schema check (unique ids, required
    fields, non-empty arrays/strings, and — for project entries — at least
    one descriptive `data` field).
-2. Run `npm run test:twin` — confirms the retrieval engine still resolves
+2. Run `npm run check:consistency` — the knowledge consistency guard
+   (`scripts/check-knowledge-consistency.js`). This catches problems
+   `validate-knowledge.js` can't see because they only show up when
+   comparing entries against each other: the same keyword declared by two
+   different entries, or the same `chip` question text used twice. Both
+   are real bugs, not style nits — the retrieval engine matches keywords
+   with a plain substring check and no tie-break
+   (`scoreEntry`/`detectProjectEntities` in `code.html`'s TWIN-ENGINE
+   block), so a duplicated keyword means one entry's trigger silently
+   shadows the other's, and a duplicated chip means one entry's quick
+   question is never reachable. It also warns (without failing) if one
+   entry repeats the same keyword twice in its own array — harmless, but
+   worth cleaning up. Run this after adding or renaming any `keywords` or
+   `chip` value, not just after adding a whole new entry.
+3. Run `npm run test:twin` — confirms the retrieval engine still resolves
    sample questions to the right entries and unrelated questions still
    fall through to the fallback.
-3. If you added or changed a `chip` field, run `npm run sync:twin` (or use
+4. If you added or changed a `chip` field, run `npm run sync:twin` (or use
    the `/sync-twin` command) to regenerate the chip buttons in `code.html`
    and `index.html`.
+
+All four checks (plus the grounding/fallback guards) run in one shot via
+`npm run precommit`, and automatically via the `PostToolUse` hook whenever
+Claude edits `knowledge.json`, `code.html`, or `index.html` — see the
+"Knowledge consistency guard" entry in `PLAN.md`'s plugin section.
 
 ## What never to do
 

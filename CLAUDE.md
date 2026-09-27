@@ -34,16 +34,17 @@ When in doubt, prefer the fallback over a plausible-sounding guess.
 - `DESIGN.md` — design system spec (colors, type, spacing)
 - `knowledge.json` — the Digital Twin's single source of truth
 - `PLAN.md` — build spec: features, plugin components, done/pending
-- `scripts/` — Node validation/test tooling (schema check, grounding
-  guard, fallback guard, functional retrieval tests, chip sync). Run via
-  `npm run validate:knowledge`, `npm run validate:twin`,
+- `scripts/` — Node validation/test tooling (schema check, cross-entry
+  knowledge consistency guard, grounding guard, fallback guard, functional
+  retrieval tests, chip sync). Run via `npm run validate:knowledge`,
+  `npm run check:consistency`, `npm run validate:twin`,
   `npm run test:twin`, `npm run sync:twin`, or `npm run precommit` for
   all of them. Zero npm dependencies — plain Node scripts, not a build
   step for the site itself.
 - `.claude/` — the `twin-knowledge-base` skill, the `/add-project` and
   `/sync-twin` commands, and the `PostToolUse` hook that runs the guard
-  scripts automatically after edits to `knowledge.json`/`code.html`/
-  `index.html`.
+  scripts (including the knowledge consistency guard) automatically after
+  edits to `knowledge.json`/`code.html`/`index.html`.
 
 No build step, no backend, no dependencies beyond the Tailwind CDN script
 and web fonts loaded in `<head>`. Keep it that way unless a task
@@ -85,3 +86,12 @@ keep the knowledge base and the UI in sync. Full specs are in `PLAN.md`
 under "Plugin components." Skills and commands never write facts directly
 into `code.html`'s `<script>` block — they write to `knowledge.json` and
 regenerate the rendered bits (quick-question chips, project cards) from it.
+
+The knowledge consistency guard (`scripts/check-knowledge-consistency.js`,
+`npm run check:consistency`) is the validation half of that plugin: it
+compares `knowledge.json` entries against *each other* — a keyword or
+`chip` reused by two different entries — which the per-entry schema check
+in `validate-knowledge.js` can't catch on its own. A duplicated keyword is
+a real retrieval bug (the engine has no tie-break for it), not a style
+issue, so this runs automatically in the same `PostToolUse` hook as the
+other guards.

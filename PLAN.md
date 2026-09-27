@@ -187,9 +187,10 @@ bypassing `knowledge.json`. Both run automatically via the
 `PostToolUse` hook in `.claude/settings.json`
 (`scripts/twin-guard-hook.js`) whenever Claude edits `knowledge.json`,
 `code.html`, or `index.html`, and block (exit 2) with a clear message on
-failure. There's no `.git` directory yet, so a real git `pre-commit` hook
-isn't wired up yet — `hooks/pre-commit` is ready to install once `git
-init` happens (`cp hooks/pre-commit .git/hooks/pre-commit`).
+failure. `hooks/pre-commit` mirrors the same checks as a real git hook;
+it isn't installed into `.git/hooks/` automatically (`cp hooks/pre-commit
+.git/hooks/pre-commit` to opt in) — the Claude Code `PostToolUse` hook
+covers the same ground in the meantime.
 
 ### Hook: fallback-string guard — DONE
 `scripts/check-fallback.js`. Fails if `knowledge.json`'s `meta.fallback`
@@ -198,9 +199,46 @@ is missing/empty, if the twin engine block never reads
 a second, hand-typed string literal anywhere in that block. Wired into
 the same `PostToolUse` hook as the knowledge-base guard.
 
+### Plugin: knowledge consistency guard — DONE
+`scripts/check-knowledge-consistency.js`, run via `npm run
+check:consistency`. `validate-knowledge.js` checks each entry in
+isolation (does *this* entry have a unique id, non-empty keywords, a
+required `data.name`, ...); this plugin instead compares entries
+*against each other*, catching collisions the per-entry check structurally
+can't see:
+- The same keyword string declared by two different entries. The
+  retrieval engine's `scoreEntry()` and `detectProjectEntities()`
+  (`code.html`'s TWIN-ENGINE block) both match keywords with a plain
+  substring check and no tie-break, so a duplicated keyword means one
+  entry's trigger silently shadows the other's — a real retrieval bug,
+  not a style nit.
+- The same `chip` question text declared by two different entries — would
+  render an indistinguishable duplicate quick-question button, and one
+  entry's chip would never be reachable by clicking it.
+- (Warning only, non-blocking) the same keyword repeated twice inside one
+  entry's own `keywords` array — harmless to retrieval, flagged as
+  copy-paste drift worth cleaning up.
+It exits 2 (blocking) on either error case, printing which entries
+collide and why, and exits 0 with a summary line otherwise. Wired into
+`npm run precommit`, `hooks/pre-commit`, and the same `PostToolUse` hook
+(`scripts/twin-guard-hook.js`) as the other two guards, so it runs
+automatically whenever `knowledge.json` is edited. The `add-project`
+command and the `twin-knowledge-base` skill both call it out as a
+required step after adding/editing keywords or a chip.
+**Tested**: verified it passes cleanly against the real 11-entry
+`knowledge.json` (81 distinct keywords, 0 collisions), and — against three
+temporary broken copies, restored immediately after — correctly catches
+(1) a keyword duplicated across two entries, exit 2; (2) a `chip` string
+duplicated across two entries, exit 2; (3) a keyword repeated within one
+entry, warns but still exits 0. The three PostToolUse guards, run via a
+simulated hook payload, still pass in sequence (validate-knowledge →
+check-knowledge-consistency → check-twin-grounding → check-fallback), and
+an unrelated file path still no-ops the hook.
+
 ### Validation & testing — DONE
 ```
 npm run validate:knowledge   # schema check (simple `answer` OR structured `data`)
+npm run check:consistency    # cross-entry keyword/chip collision guard
 npm run validate:twin        # grounding guard + fallback guard
 npm run test:twin            # functional retrieval tests (TEST1-20 below)
 npm run sync:twin            # regenerate quick-question chips
@@ -258,21 +296,28 @@ static site.
 - `twin-knowledge-base` skill, `/add-project` command, `/sync-twin`
   command — all updated for the structured project schema and the
   intent-based retrieval pipeline.
-- Knowledge-base guard + fallback-string guard, wired into a Claude Code
-  `PostToolUse` hook (`.claude/settings.json` →
-  `scripts/twin-guard-hook.js`), plus `hooks/pre-commit` (this repo now
-  has `.git`, so it can be installed with
-  `cp hooks/pre-commit .git/hooks/pre-commit` if a live git hook is
+- Knowledge-base guard + fallback-string guard + knowledge consistency
+  guard, all three wired into a Claude Code `PostToolUse` hook
+  (`.claude/settings.json` → `scripts/twin-guard-hook.js`), plus
+  `hooks/pre-commit` (this repo now has `.git`, so it can be installed
+  with `cp hooks/pre-commit .git/hooks/pre-commit` if a live git hook is
   wanted — the Claude Code hook covers the same checks in the meantime).
-  Both guards were updated to understand the new `data`-object entries
-  and re-verified to still catch a reintroduced hardcoded branch/literal.
+  All three guards were updated/verified to understand the current
+  11-entry `data`-object schema.
+- **Plugin: knowledge consistency guard** (`scripts/
+  check-knowledge-consistency.js`, `npm run check:consistency`) — new.
+  Catches cross-entry keyword collisions and duplicate `chip` text that
+  the per-entry schema check can't see (see "Plugin components" above for
+  why this is a real retrieval bug, not a lint nit). Verified against the
+  real knowledge base (0 collisions) and against three deliberately broken
+  temporary copies (each correctly caught, originals restored).
 - Validation/testing: `npm run validate:knowledge`, `npm run
-  validate:twin`, `npm run test:twin` — all passing, 19 test cases (see
-  "Validation & testing" above), plus a manual sweep across every
-  question type in this task's test matrix (all four projects × identity/
-  tech-stack/features/purpose/problem/summary/timeline/role, logical
-  questions, comparisons, and follow-up context) confirmed correct,
-  grounded output or the exact fallback.
+  check:consistency`, `npm run validate:twin`, `npm run test:twin` — all
+  passing, 19 test cases (see "Validation & testing" above), plus a manual
+  sweep across every question type in this task's test matrix (all four
+  projects × identity/tech-stack/features/purpose/problem/summary/
+  timeline/role, logical questions, comparisons, and follow-up context)
+  confirmed correct, grounded output or the exact fallback.
 
 **Pending**
 - Replace placeholder contact links (email/GitHub/LinkedIn) —

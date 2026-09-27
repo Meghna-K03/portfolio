@@ -79,6 +79,10 @@ is not done if only one is updated:
 
 6. **Validate.** Run, in order:
    - `npm run validate:knowledge`
+   - `npm run check:consistency` (catches a new project's keywords/chip
+     colliding with an existing entry's — a common mistake when a new
+     project shares a technology name or domain word with one already in
+     `knowledge.json`)
    - `npm run test:twin`
    - `npm run validate:twin`
    Fix anything that fails before considering this done.

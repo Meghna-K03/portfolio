@@ -40,6 +40,7 @@ if (!RELEVANT.test(filePath)) {
 
 const guards = [
   ['scripts/validate-knowledge.js'],
+  ['scripts/check-knowledge-consistency.js'],
   ['scripts/check-twin-grounding.js'],
   ['scripts/check-fallback.js'],
 ];
