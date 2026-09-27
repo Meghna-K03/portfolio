@@ -1,0 +1,156 @@
+{
+  "meta": {
+    "twinName": "Portfolio Twin",
+    "fallback": "I don't have that information in my portfolio knowledge yet."
+  },
+  "entries": [
+    {
+      "id": "who",
+      "topics": ["identity", "about"],
+      "keywords": [
+        "who is meghna",
+        "who is she",
+        "who are you",
+        "introduce yourself",
+        "introduce",
+        "about meghna",
+        "tell me about yourself",
+        "tell me about her"
+      ],
+      "chip": "Who is Meghna?",
+      "answer": "Meghna K. is a B.Tech (AI & ML) student at Atria University in Bengaluru, Karnataka, India. She's a curious builder and explorer who enjoys learning by building things, and is curious about how technology can solve everyday problems."
+    },
+    {
+      "id": "study",
+      "topics": ["education", "about"],
+      "keywords": [
+        "study",
+        "studies",
+        "studying",
+        "university",
+        "atria",
+        "degree",
+        "education",
+        "b.tech",
+        "btech",
+        "what does she study",
+        "where does she study"
+      ],
+      "chip": "What does she study?",
+      "answer": "Meghna is a B.Tech (AI & ML) student at Atria University in Bengaluru, Karnataka, India."
+    },
+    {
+      "id": "interests",
+      "topics": ["interests", "about"],
+      "keywords": [
+        "interest",
+        "interests",
+        "interested in",
+        "passionate",
+        "curious",
+        "hobbies",
+        "explore",
+        "what is she interested in"
+      ],
+      "chip": "What is she interested in?",
+      "answer": "Meghna is a curious builder and explorer who enjoys learning by building things. She's curious about how technology can solve everyday problems, and likes experimenting with new tools, turning ideas into projects, and learning something new along the way."
+    },
+    {
+      "id": "projects-overview",
+      "topics": ["projects"],
+      "keywords": [
+        "projects",
+        "what projects",
+        "what has she built",
+        "what did she build",
+        "built",
+        "portfolio work",
+        "project list",
+        "work she has done"
+      ],
+      "chip": "What projects has she built?",
+      "answer": "Meghna's projects include TasteOrbit (Restaurant Insights & Quality Prediction), Project Panopticon (Intelligent Exam Proctoring), Automated Invoice Processing & Anomaly Detection, and Memory of a City. Ask about any of them by name for more detail!"
+    },
+    {
+      "id": "tasteorbit",
+      "topics": ["projects", "data-science"],
+      "keywords": [
+        "tasteorbit",
+        "taste orbit",
+        "zomato",
+        "restaurant insights",
+        "restaurant quality",
+        "restaurant prediction"
+      ],
+      "answer": "TasteOrbit: Restaurant Insights & Quality Prediction is a classification model predicting whether Bengaluru restaurants are highly rated, using a Zomato dataset — location, cuisine, cost, and vote count as features. It reaches about 85.7% validation accuracy with Logistic Regression, built with Python, Scikit-Learn, and Pandas."
+    },
+    {
+      "id": "panopticon",
+      "topics": ["projects", "machine-learning"],
+      "keywords": [
+        "panopticon",
+        "project panopticon",
+        "proctoring",
+        "exam proctoring",
+        "proctor",
+        "intelligent exam"
+      ],
+      "answer": "Project Panopticon: Intelligent Exam Proctoring is a precision-first exam-proctoring pipeline Meghna built during an AI internship. It merges asynchronous video and system-event telemetry, engineers rolling-window features, and raises the decision threshold to 90% confidence to eliminate false cheating accusations. Built with Python, Pandas, Scikit-Learn, and Random Forest."
+    },
+    {
+      "id": "invoice-processing",
+      "topics": ["projects", "automation"],
+      "keywords": [
+        "invoice",
+        "invoice processing",
+        "anomaly detection",
+        "ocr",
+        "tesseract"
+      ],
+      "answer": "Automated Invoice Processing & Anomaly Detection is an end-to-end pipeline that reads invoice images, extracts fields (invoice number, vendor, amount) via OpenCV preprocessing, Tesseract OCR, and regex, then flags suspicious invoices using Z-score and Isolation Forest. It processed 117 invoices at a 94.8% parsing success rate, built with Python, OpenCV, Tesseract, and Scikit-Learn."
+    },
+    {
+      "id": "memory-of-a-city",
+      "topics": ["projects", "full-stack"],
+      "keywords": [
+        "memory of a city",
+        "city change investigator",
+        "indiranagar",
+        "koramangala",
+        "whitefield"
+      ],
+      "answer": "Memory of a City is a Bengaluru-focused urban intelligence site exploring how three neighbourhoods — Indiranagar, Koramangala, and Whitefield — changed between 2010 and 2026, with an AI \"City Change Investigator\" that explains what might account for the change, grounded only in the site's own prepared dataset (never invents facts or statistics). Built with React, Vite, Node.js/Express, and the Gemini API."
+    },
+    {
+      "id": "skills-stack",
+      "topics": ["skills", "stack"],
+      "keywords": [
+        "tech stack",
+        "technologies",
+        "skills",
+        "tools she uses",
+        "stack",
+        "technology",
+        "programming language",
+        "python",
+        "what tools does she use",
+        "what does she use"
+      ],
+      "answer": "Across her projects, Meghna has worked with Python, Scikit-Learn, Pandas, OpenCV, Tesseract, React, Vite, Node.js/Express, and the Gemini API."
+    },
+    {
+      "id": "location",
+      "topics": ["location", "about"],
+      "keywords": [
+        "where is she based",
+        "where does she live",
+        "location",
+        "based in",
+        "where is she from",
+        "bengaluru",
+        "karnataka"
+      ],
+      "answer": "Meghna is based in Bengaluru, Karnataka, India."
+    }
+  ]
+}

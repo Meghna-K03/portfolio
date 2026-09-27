@@ -1,0 +1,20 @@
+#!/bin/sh
+# Digital Twin pre-commit guard.
+#
+# This project has no .git directory yet, so this script isn't wired up as
+# a live git hook — it's here for when `git init` happens. To activate it:
+#
+#   cp hooks/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+#
+# Until then, the same checks run automatically via the Claude Code
+# PostToolUse hook in .claude/settings.json (scripts/twin-guard-hook.js)
+# whenever Claude edits knowledge.json, code.html or index.html, and can
+# always be run manually with `npm run precommit`.
+
+set -e
+
+node scripts/validate-knowledge.js
+node scripts/check-twin-grounding.js
+node scripts/check-fallback.js
+node scripts/test-twin-engine.js

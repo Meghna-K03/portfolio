@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Meghna K — AI &amp; ML Builder Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: "#fdf9f1",
+            ivory: "#f7f3eb",
+            blush: "#fceded",
+            "blush-soft": "#fdf1f0",
+            lavender: "#e8dff5",
+            "lavender-subtle": "#ece8f3",
+            caramel: "#c07d58",
+            "caramel-deep": "#9f5d3a",
+            plum: "#2e1c2b",
+            "plum-light": "#4a3347",
+            "plum-soft": "#7a6276",
+            surface: "#fdf9f1",
+            "surface-container": "#f1ede6"
+          },
+          fontFamily: {
+            serif: ["Playfair Display", "Cormorant Garamond", "Georgia", "serif"],
+            editorial: ["Cormorant Garamond", "Playfair Display", "Georgia", "serif"],
+            sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"]
+          },
+          animation: {
+            'float-slow': 'float 6s ease-in-out infinite',
+            'float-delayed': 'float 7s ease-in-out 2s infinite',
+            'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+            'fade-slide': 'fadeSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-8px) rotate(1.5deg)' }
+            },
+            pulseSoft: {
+              '0%, 100%': { opacity: '0.9', transform: 'scale(1)' },
+              '50%': { opacity: '0.6', transform: 'scale(1.03)' }
+            },
+            fadeSlide: {
+              '0%': { opacity: '0', transform: 'translateY(8px) scale(0.97)' },
+              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #fdf9f1;
+      color: #2e1c2b;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background-color: #fceded;
+      color: #9f5d3a;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
+    .dotted-path {
+      stroke-dasharray: 6, 8;
+      animation: dashmove 20s linear infinite;
+    }
+
+    @keyframes dashmove {
+      to {
+        stroke-dashoffset: -200;
+      }
+    }
+  </style>
+</head>
+
+<body class="relative bg-cream text-plum antialiased selection:bg-blush selection:text-caramel-deep">
+
+  <!-- ======================================================== -->
+  <!-- NAVIGATION: MINIMAL FLOATING PILL                       -->
+  <!-- ======================================================== -->
+  <header class="fixed top-5 left-0 right-0 w-full z-50 flex justify-center px-4 pointer-events-none">
+    <nav
+      class="pointer-events-auto flex items-center gap-2 sm:gap-4 px-6 sm:px-8 py-2.5 rounded-full backdrop-blur-md bg-cream/90 border border-plum/10 shadow-[0_8px_30px_rgba(46,28,43,0.06)] transition-all duration-300">
+      <div class="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium tracking-wide">
+        <a class="px-3 py-1 rounded-full text-plum hover:text-caramel transition-colors" href="#hero">Home</a>
+        <a class="px-3 py-1 rounded-full text-plum/70 hover:text-plum transition-colors" href="#about">About</a>
+        <a class="px-3 py-1 rounded-full text-plum/70 hover:text-plum transition-colors" href="#projects">Projects</a>
+        <a class="px-3 py-1 rounded-full text-plum/70 hover:text-plum transition-colors flex items-center gap-1"
+          href="#digital-twin">
+          Twin <span class="text-caramel text-[11px]">✦</span>
+        </a>
+        <a class="px-3 py-1 rounded-full text-plum/70 hover:text-plum transition-colors" href="#contact">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="w-full relative">
+    <!-- ======================================================== -->
+    <!-- SECTION 1: HERO (CENTERED & INTERACTIVE)                -->
+    <!-- ======================================================== -->
+    <section
+      class="relative min-h-screen w-full flex flex-col items-center justify-center pt-28 pb-16 px-4 sm:px-6 z-30"
+      id="hero">
+      <!-- Soft Ambient Glow Orbs -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[550px] h-[550px] bg-blush/60 rounded-full blur-3xl">
+        </div>
+        <div class="absolute top-1/3 -left-32 w-80 h-80 bg-lavender/40 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 -right-28 w-96 h-96 bg-blush/40 rounded-full blur-3xl"></div>
+      </div>
+
+      <!-- Floating Botanical Petal SVGs -->
+      <svg class="absolute top-28 left-8 sm:left-24 w-8 h-8 text-caramel/40 animate-float-slow pointer-events-none"
+        fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2C13 6 17 8 21 8C17 10 15 14 15 18C13 14 9 12 5 12C9 10 11 6 12 2Z" opacity="0.6"></path>
+      </svg>
+      <svg
+        class="absolute top-1/2 right-6 sm:right-20 w-10 h-10 text-caramel/30 animate-float-delayed pointer-events-none"
+        fill="currentColor" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 2v4m0 12v4M2 12h4m12 0h4m-3.2-6.8l-2.8 2.8m-8 8l-2.8 2.8m13.6 0l-2.8-2.8m-8-8l-2.8-2.8"
+          stroke="currentColor" stroke-linecap="round" stroke-width="1.5"></path>
+      </svg>
+
+      <!-- Center Hero Canvas -->
+      <div class="max-w-6xl mx-auto flex flex-col items-center text-center relative z-10 w-full">
+        <!-- Interactive Girl Portrait + Location Group -->
+        <div
+          class="relative my-2 sm:my-4 select-none transition-transform duration-75 ease-out will-change-transform z-50"
+          id="hero-profile-hub">
+          <!-- Outer Soft Glow Frame -->
+          <div
+            class="relative w-56 h-72 sm:w-64 sm:h-80 md:w-72 md:h-88 rounded-[48%_52%_50%_50%_/_58%_56%_44%_42%] p-2 bg-gradient-to-tr from-caramel/20 via-blush to-lavender/30 shadow-[0_20px_50px_rgba(46,28,43,0.12)] ring-4 ring-cream transition-transform duration-500 hover:scale-[1.02]">
+            <div
+              class="w-full h-full rounded-[46%_54%_48%_52%_/_56%_54%_46%_44%] overflow-hidden bg-cream border-2 border-cream/80 relative flex items-center justify-center">
+              <img alt="Meghna K. Portrait"
+                class="w-full h-full object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
+                src="profile.png" />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-plum/20 via-transparent to-transparent pointer-events-none">
+              </div>
+            </div>
+            <!-- Floating Little Daisy Decor -->
+            <div
+              class="absolute -bottom-2 -left-2 w-10 h-10 rounded-full bg-cream shadow-md flex items-center justify-center text-caramel border border-plum/5">
+              <span class="material-symbols-outlined text-lg">spa</span>
+            </div>
+          </div>
+
+          <!-- Location Badge (Stays in Hero, fades out on scroll) -->
+          <div
+            class="absolute -right-6 sm:-right-24 md:-right-32 top-8 sm:top-12 z-20 flex flex-col items-start pointer-events-auto transition-opacity duration-300"
+            id="hero-location-badge">
+            <div
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cream/95 backdrop-blur-md border border-caramel/30 text-plum shadow-[0_8px_20px_rgba(192,125,88,0.18)] whitespace-nowrap">
+              <span class="text-xs">📍</span>
+              <span class="font-sans font-medium text-[11px] sm:text-xs tracking-wide text-plum">Bengaluru,
+                Karnataka</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-caramel animate-pulse"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typography Heading: MEGHNA K (Page 1) -> ABOUT ME (Page 2) -->
+        <div class="space-y-2 mt-6 max-w-full transition-transform duration-75 ease-out will-change-transform z-50"
+          id="hero-title-block">
+          <p class="font-serif italic text-sm sm:text-base md:text-lg text-caramel tracking-widest transition-opacity duration-300"
+            id="hero-welcome-text">welcome to my portfolio</p>
+          <h1
+            class="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.06em] uppercase text-plum font-normal leading-tight whitespace-nowrap relative"
+            id="hero-main-name">
+            <span id="title-page1" class="transition-opacity duration-200">MEGHNA K</span>
+            <span id="title-page2" class="absolute left-0 top-0 opacity-0 transition-opacity duration-200 whitespace-nowrap">ABOUT ME</span>
+          </h1>
+          <p class="font-sans text-xs sm:text-sm md:text-base text-plum/75 tracking-wide font-normal max-w-xl mx-auto pt-1 flex items-center justify-center flex-wrap gap-1 sm:gap-2 transition-opacity duration-300"
+            id="hero-sub-skills">
+            <span>B.Tech (AI/ML)</span>
+            <span class="text-caramel">✦</span>
+            <span>curious builder</span>
+            <span class="text-caramel">✦</span>
+            <span>explorer</span>
+          </p>
+        </div>
+
+        <!-- Scroll to discover bottom prompt (CTA buttons removed as requested) -->
+        <div class="flex flex-col items-center transition-opacity duration-300 w-full mt-6" id="hero-extra-controls">
+          <a class="inline-flex flex-col items-center gap-1 group text-plum/50 hover:text-caramel transition-colors"
+            href="#about">
+            <span class="font-serif italic text-xs tracking-widest text-plum/60 group-hover:text-caramel">Scroll to
+              discover ↓</span>
+            <svg class="w-4 h-4 animate-bounce text-caramel transition-transform" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8">
+              </path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORGANIC WAVY SVG DIVIDER (HERO -> ABOUT) -->
+    <div class="w-full overflow-hidden leading-none -mb-1 text-blush-soft relative z-10">
+      <svg class="w-full h-12 sm:h-16 md:h-20" fill="currentColor" preserveAspectRatio="none" viewBox="0 0 1200 120">
+        <path d="M0,0 C150,90 350,-40 500,60 C650,160 900,10 1200,50 L1200,120 L0,120 Z"></path>
+      </svg>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- SECTION 2: ABOUT ME                                     -->
+    <!-- ======================================================== -->
+    <section class="w-full bg-blush-soft py-20 px-6 sm:px-10 lg:px-16 relative z-20 min-h-screen flex items-center"
+      id="about">
+      <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <!-- Left: Target slot for Profile Picture (no duplicate second image) -->
+        <div class="lg:col-span-4 relative flex justify-center lg:justify-start min-h-[300px] sm:min-h-[350px]" id="about-profile-slot">
+        </div>
+
+        <!-- Right: Target slot for Title + Narrative directly below -->
+        <div class="lg:col-span-8 flex flex-col gap-6 pl-0 lg:pl-6" id="about-right-column">
+          <!-- Target slot for MEGHNA K. title block -->
+          <div class="min-h-[100px] flex flex-col justify-end" id="about-title-slot">
+          </div>
+
+          <!-- About Me Narrative (Exact original small font size maintained) -->
+          <div class="space-y-6 transition-opacity duration-300" id="about-narrative">
+            <div class="space-y-4 text-plum/85 text-sm sm:text-base leading-relaxed font-normal">
+              <p>I'm a B.Tech (AI &amp; ML) student at Atria University, Bengaluru, and I enjoy learning
+                by building things. I'm curious about how technology can solve everyday problems, which is what keeps me
+                exploring different ideas in AI and machine learning.</p>
+              <p>I like experimenting with new tools, turning ideas into projects, and learning something new along the
+                way. I'm still figuring out where this journey takes me — but for now, I'm enjoying the process of
+                building, exploring, and growing.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5 pt-2">
+              <span
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cream text-plum/80 text-xs border border-plum/10 font-medium whitespace-nowrap shadow-xs">
+                <span class="w-1.5 h-1.5 rounded-full bg-caramel"></span> Atria University
+              </span>
+              <span
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cream text-plum/80 text-xs border border-plum/10 font-medium whitespace-nowrap shadow-xs">
+                <span class="w-1.5 h-1.5 rounded-full bg-caramel"></span> Bengaluru, India
+              </span>
+              <span
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cream text-plum/80 text-xs border border-plum/10 font-medium whitespace-nowrap shadow-xs">
+                <span class="w-1.5 h-1.5 rounded-full bg-caramel"></span> AI &amp; ML Undergrad
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORGANIC WAVY SVG DIVIDER (ABOUT -> PROJECTS) -->
+    <div class="w-full overflow-hidden leading-none -mb-1 text-cream bg-blush-soft">
+      <svg class="w-full h-12 sm:h-16" fill="currentColor" preserveAspectRatio="none" viewBox="0 0 1200 120">
+        <path d="M0,0 C300,100 600,0 900,80 L1200,20 L1200,120 L0,120 Z"></path>
+      </svg>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- SECTION 3: MY PROJECTS (CLEAN GRID CARDS)               -->
+    <!-- ======================================================== -->
+    <section class="w-full bg-cream py-20 px-6 sm:px-10 lg:px-16 relative" id="projects">
+      <div class="max-w-7xl mx-auto flex flex-col gap-12">
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-plum/10 pb-6">
+          <div>
+            <span class="font-serif italic text-caramel text-sm sm:text-base tracking-widest block mb-1">chapter
+              02</span>
+            <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl text-plum font-medium tracking-tight">
+              My Projects
+            </h2>
+          </div>
+          <p class="font-serif italic text-sm sm:text-base text-plum/70 mt-2 md:mt-0 md:text-right">
+            Selected exploratory builds &amp; software experiments
+          </p>
+        </div>
+
+        <!-- GRID OF 4 BALANCED CARDS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- CARD 01 -->
+          <div
+            class="group flex flex-col justify-between bg-ivory rounded-2xl border border-plum/10 p-5 shadow-[0_6px_24px_rgba(46,28,43,0.04)] hover:shadow-[0_16px_36px_rgba(46,28,43,0.1)] hover:-translate-y-1.5 hover:border-caramel/40 transition-all duration-300">
+            <div class="space-y-3.5">
+              <!-- Visual thumbnail header -->
+              <div
+                class="w-full h-36 rounded-xl bg-gradient-to-tr from-caramel/20 via-blush to-lavender/30 border border-plum/10 flex items-center justify-center relative overflow-hidden">
+                <div
+                  class="absolute inset-0 bg-[radial-gradient(#c07d58_1px,transparent_1px)] [background-size:12px_12px] opacity-25">
+                </div>
+                <div
+                  class="w-12 h-12 rounded-full bg-cream shadow-sm flex items-center justify-center text-caramel relative z-10 border border-plum/5">
+                  <span class="material-symbols-outlined text-2xl">restaurant</span>
+                </div>
+              </div>
+              <!-- Top Metadata -->
+              <div class="flex items-center justify-between pt-1">
+                <span class="font-serif text-2xl font-light text-caramel">01</span>
+                <span
+                  class="text-[11px] uppercase tracking-wider font-semibold text-plum/80 bg-blush px-2.5 py-0.5 rounded-full border border-plum/5 whitespace-nowrap">Data
+                  Science</span>
+              </div>
+              <h3 class="font-serif text-lg font-medium text-plum group-hover:text-caramel transition-colors">
+                TasteOrbit: Restaurant Insights &amp; Quality Prediction
+              </h3>
+              <p class="text-xs text-plum/80 leading-relaxed font-normal">
+                Classification model predicting whether Bengaluru restaurants are highly rated, using a Zomato dataset —
+                location, cuisine, cost, and vote count as features. ~85.7% validation accuracy with Logistic
+                Regression.
+              </p>
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Python</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Scikit-Learn</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Pandas</span>
+              </div>
+            </div>
+            <!-- Action -->
+            <div class="pt-4 border-t border-plum/10 mt-4">
+              <a class="inline-flex items-center gap-1.5 text-xs font-semibold text-caramel hover:text-caramel-deep tracking-wider uppercase group-hover:translate-x-1 transition-all whitespace-nowrap"
+                href="https://github.com/Meghna-K03/-TasteOrbit-Restaurant-Insights-Quality-Prediction" target="_blank"
+                rel="noopener noreferrer">
+                View Project <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- CARD 02 -->
+          <div
+            class="group flex flex-col justify-between bg-ivory rounded-2xl border border-plum/10 p-5 shadow-[0_6px_24px_rgba(46,28,43,0.04)] hover:shadow-[0_16px_36px_rgba(46,28,43,0.1)] hover:-translate-y-1.5 hover:border-caramel/40 transition-all duration-300">
+            <div class="space-y-3.5">
+              <!-- Visual thumbnail header -->
+              <div
+                class="w-full h-36 rounded-xl bg-gradient-to-tr from-lavender/30 via-cream to-blush border border-plum/10 flex items-center justify-center relative overflow-hidden">
+                <div
+                  class="absolute inset-0 bg-[radial-gradient(#2e1c2b_1px,transparent_1px)] [background-size:12px_12px] opacity-15">
+                </div>
+                <div
+                  class="w-12 h-12 rounded-full bg-cream shadow-sm flex items-center justify-center text-caramel relative z-10 border border-plum/5">
+                  <span class="material-symbols-outlined text-2xl">visibility</span>
+                </div>
+              </div>
+              <!-- Top Metadata -->
+              <div class="flex items-center justify-between pt-1">
+                <span class="font-serif text-2xl font-light text-caramel">02</span>
+                <span
+                  class="text-[11px] uppercase tracking-wider font-semibold text-plum/80 bg-lavender/60 px-2.5 py-0.5 rounded-full border border-plum/5 whitespace-nowrap">Machine
+                  Learning</span>
+              </div>
+              <h3 class="font-serif text-lg font-medium text-plum group-hover:text-caramel transition-colors">
+                Project Panopticon: Intelligent Exam Proctoring
+              </h3>
+              <p class="text-xs text-plum/80 leading-relaxed font-normal">
+                Precision-first exam-proctoring pipeline built during an AI internship — merges asynchronous video and
+                system-event telemetry, engineers rolling-window features, and raises the decision threshold to 90%
+                confidence to eliminate false cheating accusations.
+              </p>
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Python</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Pandas</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Scikit-Learn</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Random
+                  Forest</span>
+              </div>
+            </div>
+            <!-- Action -->
+            <div class="pt-4 border-t border-plum/10 mt-4">
+              <a class="inline-flex items-center gap-1.5 text-xs font-semibold text-caramel hover:text-caramel-deep tracking-wider uppercase group-hover:translate-x-1 transition-all whitespace-nowrap"
+                href="https://github.com/Meghna-K03/Project-Panopticon" target="_blank" rel="noopener noreferrer">
+                View Project <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- CARD 03 -->
+          <div
+            class="group flex flex-col justify-between bg-ivory rounded-2xl border border-plum/10 p-5 shadow-[0_6px_24px_rgba(46,28,43,0.04)] hover:shadow-[0_16px_36px_rgba(46,28,43,0.1)] hover:-translate-y-1.5 hover:border-caramel/40 transition-all duration-300">
+            <div class="space-y-3.5">
+              <!-- Visual thumbnail header -->
+              <div
+                class="w-full h-36 rounded-xl bg-gradient-to-tr from-blush via-cream to-lavender/40 border border-plum/10 flex items-center justify-center relative overflow-hidden">
+                <div
+                  class="absolute inset-0 bg-[radial-gradient(#c07d58_1px,transparent_1px)] [background-size:12px_12px] opacity-25">
+                </div>
+                <div
+                  class="w-12 h-12 rounded-full bg-cream shadow-sm flex items-center justify-center text-caramel relative z-10 border border-plum/5">
+                  <span class="material-symbols-outlined text-2xl">receipt_long</span>
+                </div>
+              </div>
+              <!-- Top Metadata -->
+              <div class="flex items-center justify-between pt-1">
+                <span class="font-serif text-2xl font-light text-caramel">03</span>
+                <span
+                  class="text-[11px] uppercase tracking-wider font-semibold text-caramel-deep bg-blush px-2.5 py-0.5 rounded-full border border-plum/5 whitespace-nowrap">Automation</span>
+              </div>
+              <h3 class="font-serif text-lg font-medium text-plum group-hover:text-caramel transition-colors">
+                Automated Invoice Processing &amp; Anomaly Detection
+              </h3>
+              <p class="text-xs text-plum/80 leading-relaxed font-normal">
+                End-to-end pipeline that reads invoice images, extracts fields (invoice number, vendor, amount) via
+                OpenCV preprocessing + Tesseract OCR + regex, then flags suspicious invoices using Z-score and Isolation
+                Forest. Processed 117 invoices at a 94.8% parsing success rate.
+              </p>
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Python</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">OpenCV</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Tesseract</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Scikit-Learn</span>
+              </div>
+            </div>
+            <!-- Action -->
+            <div class="pt-4 border-t border-plum/10 mt-4">
+              <a class="inline-flex items-center gap-1.5 text-xs font-semibold text-caramel hover:text-caramel-deep tracking-wider uppercase group-hover:translate-x-1 transition-all whitespace-nowrap"
+                href="https://github.com/Meghna-K03/Invoice-processing-and-anomaly-detection-project" target="_blank"
+                rel="noopener noreferrer">
+                View Project <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- CARD 04 -->
+          <div
+            class="group flex flex-col justify-between bg-ivory rounded-2xl border border-plum/10 p-5 shadow-[0_6px_24px_rgba(46,28,43,0.04)] hover:shadow-[0_16px_36px_rgba(46,28,43,0.1)] hover:-translate-y-1.5 hover:border-caramel/40 transition-all duration-300">
+            <div class="space-y-3.5">
+              <!-- Visual thumbnail header -->
+              <div
+                class="w-full h-36 rounded-xl bg-gradient-to-tr from-lavender/40 via-blush/40 to-cream border border-plum/10 flex items-center justify-center relative overflow-hidden">
+                <div
+                  class="absolute inset-0 bg-[radial-gradient(#2e1c2b_1px,transparent_1px)] [background-size:12px_12px] opacity-15">
+                </div>
+                <div
+                  class="w-12 h-12 rounded-full bg-cream shadow-sm flex items-center justify-center text-caramel relative z-10 border border-plum/5">
+                  <span class="material-symbols-outlined text-2xl">location_city</span>
+                </div>
+              </div>
+              <!-- Top Metadata -->
+              <div class="flex items-center justify-between pt-1">
+                <span class="font-serif text-2xl font-light text-caramel">04</span>
+                <span
+                  class="text-[11px] uppercase tracking-wider font-semibold text-plum/80 bg-cream px-2.5 py-0.5 rounded-full border border-plum/10 whitespace-nowrap">Full-Stack
+                  / AI</span>
+              </div>
+              <h3 class="font-serif text-lg font-medium text-plum group-hover:text-caramel transition-colors">
+                Memory of a City
+              </h3>
+              <p class="text-xs text-plum/80 leading-relaxed font-normal">
+                Bengaluru-focused urban intelligence site exploring how three neighbourhoods — Indiranagar, Koramangala,
+                Whitefield — changed between 2010 and 2026, with an AI "City Change Investigator" that explains what
+                might account for the change, grounded only in the site's own prepared dataset (never invents facts or
+                statistics).
+              </p>
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">React</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Vite</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Node.js/Express</span>
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cream text-[11px] text-plum/80 border border-plum/10 whitespace-nowrap">Gemini
+                  API</span>
+              </div>
+            </div>
+            <!-- Action -->
+            <div class="pt-4 border-t border-plum/10 mt-4">
+              <a class="inline-flex items-center gap-1.5 text-xs font-semibold text-caramel hover:text-caramel-deep tracking-wider uppercase group-hover:translate-x-1 transition-all whitespace-nowrap"
+                href="https://github.com/Meghna-K03/Memory-of--a-city" target="_blank" rel="noopener noreferrer">
+                View Project <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+          <!-- PROJECTS-GRID:APPEND-NEW-CARDS-ABOVE-THIS-LINE (used by /add-project) -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ORGANIC WAVY SVG DIVIDER (PROJECTS -> DIGITAL TWIN) -->
+    <div class="w-full overflow-hidden leading-none -mb-1 text-blush-soft bg-cream">
+      <svg class="w-full h-12 sm:h-16" fill="currentColor" preserveAspectRatio="none" viewBox="0 0 1200 120">
+        <path d="M0,40 C200,90 400,-10 700,50 C950,100 1100,20 1200,60 L1200,120 L0,120 Z"></path>
+      </svg>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- SECTION 4: MEET MY DIGITAL TWIN ✨                      -->
+    <!-- ======================================================== -->
+    <section class="w-full bg-blush-soft py-20 px-6 sm:px-10 lg:px-16 relative" id="digital-twin">
+      <div class="max-w-5xl mx-auto flex flex-col gap-10">
+        <!-- Section Header -->
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+          <div
+            class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-cream border border-caramel/30 text-caramel-deep text-xs font-medium uppercase tracking-wider">
+            <span>✨</span> Interactive AI Companion
+          </div>
+          <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl text-plum font-medium tracking-tight">
+            Meet my digital twin ✨
+          </h2>
+          <p class="font-serif italic text-sm sm:text-base text-plum/70">
+            Curious about me? Ask away. Grounded in my studies, projects, and learning journey.
+          </p>
+        </div>
+
+        <!-- Conversational Interface Card -->
+        <div
+          class="bg-cream rounded-3xl border border-plum/10 shadow-[0_20px_50px_rgba(46,28,43,0.08)] overflow-hidden grid grid-cols-1 md:grid-cols-12">
+          <!-- Left: Illustrated Avatar with Friendly Speech Bubble -->
+          <div
+            class="md:col-span-4 bg-ivory p-6 sm:p-8 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-plum/10 relative">
+            <div
+              class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-caramel via-blush to-lavender shadow-md mb-4">
+              <div class="w-full h-full rounded-full overflow-hidden bg-cream">
+                <img alt="Meghna Twin Avatar" class="w-full h-full object-cover object-center"
+                  src="bot-avatar.jpg" />
+              </div>
+              <span class="absolute bottom-1 right-2 w-4 h-4 rounded-full bg-caramel ring-4 ring-ivory"></span>
+            </div>
+            <h3 class="font-serif text-xl text-plum font-semibold">Meghna's Twin</h3>
+            <p class="text-xs text-caramel uppercase tracking-wider font-semibold mt-0.5">Online • Interactive</p>
+
+            <div
+              class="mt-4 p-3.5 bg-cream rounded-2xl rounded-tr-sm border border-plum/10 text-xs text-plum/80 leading-relaxed font-serif italic shadow-xs">
+              "Hi! I'm Meghna's simulated twin. Click one of the questions below or ask me about her background,
+              passions, or projects!"
+            </div>
+          </div>
+
+          <!-- Right: Interactive Chat Engine -->
+          <div class="md:col-span-8 p-6 sm:p-8 flex flex-col justify-between gap-5 bg-cream">
+            <!-- Chat Messages Log -->
+            <div class="h-64 sm:h-72 overflow-y-auto space-y-3.5 pr-2" id="twin-chat-box">
+              <!-- Bot Greeting Message -->
+              <div class="flex items-start gap-2.5 max-w-xl">
+                <div
+                  class="w-7 h-7 rounded-full bg-blush flex items-center justify-center text-xs font-serif text-caramel shrink-0 border border-plum/10 font-bold">
+                  M
+                </div>
+                <div
+                  class="bg-ivory p-3.5 rounded-2xl rounded-tl-sm text-xs sm:text-sm text-plum/90 border border-plum/5 shadow-xs leading-relaxed">
+                  Hello! 👋 Feel free to click any prompt below, or type your own question about my background in AI,
+                  computer vision experiments, or university projects.
+                </div>
+              </div>
+            </div>
+
+            <!-- Clickable Suggested Chips -->
+            <div class="flex flex-col gap-2 pt-2 border-t border-plum/10">
+              <span class="text-[11px] font-serif uppercase tracking-widest text-plum/50">Suggested Questions:</span>
+              <div class="flex flex-wrap gap-2" id="twin-chip-list">
+                <!-- TWIN-CHIPS:START (generated by /sync-twin from knowledge.json — do not hand-edit) -->
+                <button
+                  class="px-3 py-1.5 rounded-full bg-blush-soft hover:bg-blush border border-plum/10 text-xs font-medium text-plum transition-all shadow-xs hover:-translate-y-0.5"
+                  onclick="handleTwinQuestion('Who is Meghna?')">
+                  ✦ Who is Meghna?
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-full bg-blush-soft hover:bg-blush border border-plum/10 text-xs font-medium text-plum transition-all shadow-xs hover:-translate-y-0.5"
+                  onclick="handleTwinQuestion('What does she study?')">
+                  ✦ What does she study?
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-full bg-blush-soft hover:bg-blush border border-plum/10 text-xs font-medium text-plum transition-all shadow-xs hover:-translate-y-0.5"
+                  onclick="handleTwinQuestion('What is she interested in?')">
+                  ✦ What is she interested in?
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-full bg-blush-soft hover:bg-blush border border-plum/10 text-xs font-medium text-plum transition-all shadow-xs hover:-translate-y-0.5"
+                  onclick="handleTwinQuestion('What projects has she built?')">
+                  ✦ What projects has she built?
+                </button>
+                <!-- TWIN-CHIPS:END -->
+              </div>
+            </div>
+
+            <!-- Freeform input form with scope control -->
+            <form class="relative flex items-center gap-2" onsubmit="handleChatSubmit(event)">
+              <input
+                class="w-full px-4 py-2.5 rounded-full bg-ivory border border-plum/15 text-xs sm:text-sm text-plum placeholder-plum/40 focus:outline-none focus:border-caramel focus:ring-1 focus:ring-caramel transition-all"
+                id="twin-user-input" placeholder="Ask Meghna's digital twin a question..." type="text">
+              <button
+                class="px-5 py-2.5 rounded-full bg-caramel hover:bg-caramel-deep text-cream text-xs font-semibold tracking-wider transition-all shrink-0 flex items-center gap-1 shadow-sm"
+                type="submit">
+                Send <span class="material-symbols-outlined text-sm">send</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORGANIC WAVY SVG DIVIDER (TWIN -> CONTACT) -->
+    <div class="w-full overflow-hidden leading-none -mb-1 text-cream bg-blush-soft">
+      <svg class="w-full h-12 sm:h-16" fill="currentColor" preserveAspectRatio="none" viewBox="0 0 1200 120">
+        <path d="M0,60 C300,10 600,90 900,30 L1200,80 L1200,120 L0,120 Z"></path>
+      </svg>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- SECTION 5: CONTACT & MINIMAL FOOTER                     -->
+    <!-- ======================================================== -->
+    <section class="w-full bg-cream py-20 px-6 sm:px-10 lg:px-16 relative" id="contact">
+      <div class="max-w-4xl mx-auto flex flex-col items-center text-center gap-10">
+        <!-- Header & Warm Reflection -->
+        <div class="space-y-3">
+          <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl text-plum font-medium tracking-tight">
+            Let's Connect
+          </h2>
+          <p class="font-serif italic text-base sm:text-lg text-plum/80 max-w-xl mx-auto leading-relaxed pt-1">
+            "Thanks for exploring my little corner of the internet."
+          </p>
+          <p class="text-xs sm:text-sm text-plum/60 max-w-md mx-auto">Have an idea, a project, or just want to say
+            hello? I’d love to hear from you.</p>
+        </div>
+
+        <!-- Dotted line motif connecting with subtle botanical daisy -->
+        <div class="w-full max-w-xs flex items-center justify-center gap-3">
+          <div class="h-px flex-1 border-t border-dashed border-caramel/40"></div>
+          <span class="text-caramel font-serif text-sm">🌸</span>
+          <div class="h-px flex-1 border-t border-dashed border-caramel/40"></div>
+        </div>
+
+        <!-- Direct Action Links: Email, LinkedIn, GitHub (No single-letter wrapping) -->
+        <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <a class="px-6 py-2.5 rounded-full bg-plum text-cream hover:bg-plum-light transition-all duration-300 flex items-center gap-2 text-xs font-semibold tracking-wider uppercase shadow-md hover:-translate-y-0.5 whitespace-nowrap"
+            href="mailto:meghna@example.com">
+            <span class="material-symbols-outlined text-sm">mail</span>
+            <span>meghna@example.com</span>
+          </a>
+          <a class="px-5 py-2.5 rounded-full bg-ivory border border-plum/15 text-plum hover:border-caramel hover:text-caramel transition-all duration-300 flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase shadow-xs hover:-translate-y-0.5 whitespace-nowrap"
+            href="https://linkedin.com" rel="noopener noreferrer" target="_blank">
+            <span class="material-symbols-outlined text-sm">link</span>
+            <span>LinkedIn</span>
+          </a>
+          <a class="px-5 py-2.5 rounded-full bg-ivory border border-plum/15 text-plum hover:border-caramel hover:text-caramel transition-all duration-300 flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase shadow-xs hover:-translate-y-0.5 whitespace-nowrap"
+            href="https://github.com" rel="noopener noreferrer" target="_blank">
+            <span class="material-symbols-outlined text-sm">code</span>
+            <span>GitHub</span>
+          </a>
+        </div>
+
+        <!-- City Location & University Subtitle -->
+        <div class="flex items-center gap-2 text-xs text-plum/70 font-serif italic">
+          <span>📍 Bengaluru, Karnataka, India</span>
+          <span>•</span>
+          <span>Atria University</span>
+        </div>
+
+        <!-- Minimal Footer Strip -->
+        <div
+          class="w-full pt-12 border-t border-plum/10 flex flex-col sm:flex-row items-center justify-between text-xs text-plum/60 gap-3">
+          <p class="font-serif tracking-wider uppercase text-[11px]">
+            MEGHNA K. • AI &amp; ML student • builder • Bengaluru
+          </p>
+          <a class="text-caramel hover:text-caramel-deep transition-colors flex items-center gap-1 font-serif italic"
+            href="#hero">
+            Back to top ↑
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- SCRIPT: DIGITAL TWIN INTERACTIVE ENGINE                  -->
+  <!-- Every fact the twin can state is loaded from              -->
+  <!-- knowledge.json at runtime. This block must never contain  -->
+  <!-- a hardcoded factual answer string — see CLAUDE.md and the  -->
+  <!-- twin-knowledge-base skill before editing.                 -->
+  <!-- ======================================================== -->
+  <!-- TWIN-ENGINE:START -->
+  <script>
+    // Loaded once on page init and cached — never re-fetched per message.
+    let twinKnowledge = null;
+
+    function normalizeQuery(str) {
+      return String(str || '').toLowerCase().trim();
+    }
+
+    // Substring/keyword match count against one knowledge entry.
+    function scoreEntry(query, entry) {
+      const q = normalizeQuery(query);
+      let score = 0;
+      (entry.keywords || []).forEach((kw) => {
+        if (kw && q.includes(String(kw).toLowerCase())) score += 1;
+      });
+      (entry.topics || []).forEach((topic) => {
+        if (topic && q.includes(String(topic).toLowerCase())) score += 0.5;
+      });
+      return score;
+    }
+
+    // Minimum score an entry must reach to be returned instead of the fallback.
+    const TWIN_MATCH_THRESHOLD = 1;
+
+    // Pure retrieval function: knowledge in, answer out. No DOM, no network —
+    // this is what scripts/test-twin-engine.js exercises directly.
+    function retrieveAnswer(knowledge, query) {
+      if (!knowledge || !knowledge.meta || !Array.isArray(knowledge.entries)) {
+        return { text: (knowledge && knowledge.meta && knowledge.meta.fallback) || '', entryId: null, score: 0 };
+      }
+
+      let bestEntry = null;
+      let bestScore = 0;
+
+      knowledge.entries.forEach((entry) => {
+        const score = scoreEntry(query, entry);
+        if (score > bestScore) {
+          bestScore = score;
+          bestEntry = entry;
+        }
+      });
+
+      if (bestEntry && bestScore >= TWIN_MATCH_THRESHOLD) {
+        return { text: bestEntry.answer, entryId: bestEntry.id, score: bestScore };
+      }
+
+      // Below threshold: the fallback always comes from knowledge.meta.fallback,
+      // never a second hardcoded string.
+      return { text: knowledge.meta.fallback, entryId: null, score: bestScore };
+    }
+
+    // Exposed for the test harness and any future reuse.
+    if (typeof window !== 'undefined') {
+      window.TwinEngine = { normalizeQuery, scoreEntry, retrieveAnswer, TWIN_MATCH_THRESHOLD };
+    }
+
+    function loadTwinKnowledge() {
+      return fetch('knowledge.json')
+        .then((res) => res.json())
+        .then((data) => { twinKnowledge = data; return data; })
+        .catch(() => { twinKnowledge = null; });
+    }
+
+    function appendMessage(text, isUser = false) {
+      const chatBox = document.getElementById('twin-chat-box');
+      if (!chatBox) return;
+
+      const msgDiv = document.createElement('div');
+      msgDiv.className = isUser
+        ? 'flex justify-end'
+        : 'flex items-start gap-2.5 max-w-xl animate-fade-slide';
+
+      if (isUser) {
+        msgDiv.innerHTML = `
+          <div class="bg-caramel text-cream p-3 rounded-2xl rounded-tr-sm text-xs sm:text-sm font-sans shadow-xs">
+            ${escapeHtml(text)}
+          </div>
+        `;
+      } else {
+        msgDiv.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-blush flex items-center justify-center text-xs font-serif text-caramel shrink-0 border border-plum/10 font-bold">
+            M
+          </div>
+          <div class="bg-ivory p-3.5 rounded-2xl rounded-tl-sm text-xs sm:text-sm text-plum/90 border border-plum/5 shadow-xs leading-relaxed font-sans">
+            ${escapeHtml(text)}
+          </div>
+        `;
+      }
+
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    // Single answer path for BOTH chip clicks and free-text submissions.
+    function generateTwinResponse(query) {
+      return retrieveAnswer(twinKnowledge, query).text;
+    }
+
+    function handleTwinQuestion(question) {
+      appendMessage(question, true);
+
+      setTimeout(() => {
+        const response = generateTwinResponse(question);
+        appendMessage(response, false);
+      }, 300);
+    }
+
+    function handleChatSubmit(event) {
+      event.preventDefault();
+      const input = document.getElementById('twin-user-input');
+      if (!input) return;
+
+      const query = input.value.trim();
+      if (!query) return;
+
+      appendMessage(query, true);
+      input.value = '';
+
+      setTimeout(() => {
+        const response = generateTwinResponse(query);
+        appendMessage(response, false);
+      }, 350);
+    }
+
+    loadTwinKnowledge();
+  </script>
+  <!-- TWIN-ENGINE:END -->
+
+  <!-- Smooth Hero-to-About Scroll Transition Script -->
+  <script>
+    (function () {
+      function setupScrollAnimation() {
+        const heroHub = document.getElementById('hero-profile-hub');
+        const heroTitle = document.getElementById('hero-title-block');
+        const slotLeft = document.getElementById('about-profile-slot');
+        const slotRight = document.getElementById('about-title-slot');
+        const aboutNarrative = document.getElementById('about-narrative');
+        const heroExtra = document.getElementById('hero-extra-controls');
+        const heroSection = document.getElementById('hero');
+        const aboutSection = document.getElementById('about');
+
+        if (!heroHub || !heroTitle || !slotLeft || !slotRight || !heroSection || !aboutSection) return;
+
+        let deltaXImg = 0, deltaYImg = 0;
+        let deltaXTitle = 0, deltaYTitle = 0;
+        let isDesktop = window.innerWidth >= 1024;
+
+        function recalc() {
+          isDesktop = window.innerWidth >= 1024;
+
+          const prevHubTransform = heroHub.style.transform;
+          const prevTitleTransform = heroTitle.style.transform;
+          const hiPrefix = document.getElementById('hi-prefix');
+
+          heroHub.style.transform = 'none';
+          heroTitle.style.transform = 'none';
+
+          const currentScroll = window.scrollY || window.pageYOffset;
+
+          const hubRect = heroHub.getBoundingClientRect();
+          const titleRect = heroTitle.getBoundingClientRect();
+          const slotLeftRect = slotLeft.getBoundingClientRect();
+          const slotRightRect = slotRight.getBoundingClientRect();
+
+          const hubDocLeft = hubRect.left;
+          const hubDocTop = hubRect.top + currentScroll;
+
+          const targetLeftDocLeft = slotLeftRect.left + (slotLeftRect.width - hubRect.width) / 2;
+          const targetLeftDocTop = slotLeftRect.top + currentScroll + 10;
+
+          const titleDocLeft = titleRect.left;
+          const titleDocTop = titleRect.top + currentScroll;
+
+          const targetRightDocLeft = isDesktop ? slotRightRect.left : (slotRightRect.left + (slotRightRect.width - titleRect.width) / 2);
+          const targetRightDocTop = slotRightRect.top + currentScroll;
+
+          deltaXImg = targetLeftDocLeft - hubDocLeft;
+          deltaYImg = targetLeftDocTop - hubDocTop;
+
+          deltaXTitle = targetRightDocLeft - titleDocLeft;
+          deltaYTitle = targetRightDocTop - titleDocTop;
+
+          heroHub.style.transform = prevHubTransform;
+          heroTitle.style.transform = prevTitleTransform;
+
+          update();
+        }
+
+        function update() {
+          const scrollY = window.scrollY || window.pageYOffset;
+          const aboutTop = aboutSection.offsetTop;
+
+          const start = 0;
+          const end = Math.max(100, aboutTop - 80);
+
+          let p = (scrollY - start) / (end - start);
+          p = Math.max(0, Math.min(1, p));
+
+          const ease = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+
+          heroHub.style.transform = `translate3d(${deltaXImg * ease}px, ${deltaYImg * ease}px, 0)`;
+          heroTitle.style.transform = `translate3d(${deltaXTitle * ease}px, ${deltaYTitle * ease}px, 0)`;
+
+          const titlePage1 = document.getElementById('title-page1');
+          const titlePage2 = document.getElementById('title-page2');
+          const heroLocationBadge = document.getElementById('hero-location-badge');
+          const heroWelcomeText = document.getElementById('hero-welcome-text');
+          const heroSubSkills = document.getElementById('hero-sub-skills');
+
+          if (titlePage1 && titlePage2) {
+            titlePage1.style.opacity = Math.max(0, 1 - p * 2.2);
+            titlePage2.style.opacity = Math.min(1, Math.max(0, (p - 0.2) * 2.2));
+          }
+
+          if (heroLocationBadge) {
+            heroLocationBadge.style.opacity = Math.max(0, 1 - p * 2.2);
+          }
+
+          if (heroWelcomeText) {
+            heroWelcomeText.style.opacity = Math.max(0, 1 - p * 2.2);
+          }
+
+          if (heroSubSkills) {
+            heroSubSkills.style.opacity = Math.max(0, 1 - p * 2.2);
+          }
+
+          if (heroExtra) {
+            heroExtra.style.opacity = Math.max(0, 1 - p * 1.6);
+            heroExtra.style.pointerEvents = p > 0.4 ? 'none' : 'auto';
+          }
+
+          if (aboutNarrative) {
+            aboutNarrative.style.opacity = Math.min(1, p * 1.4);
+          }
+        }
+
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', recalc);
+
+        setTimeout(recalc, 100);
+        setTimeout(recalc, 500);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupScrollAnimation);
+      } else {
+        setupScrollAnimation();
+      }
+    })();
+  </script>
+</body>
+
+</html>

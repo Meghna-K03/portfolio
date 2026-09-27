@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/twin-guard-hook.js",
+            "statusMessage": "Validating Digital Twin knowledge base..."
+          }
+        ]
+      }
+    ]
+  }
+}

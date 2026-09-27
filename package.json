@@ -1,0 +1,12 @@
+{
+  "name": "portfolio-digital-twin",
+  "private": true,
+  "description": "Validation/test scripts for the Digital Twin. The site itself remains a dependency-free static file (Tailwind CDN only) — these scripts are dev tooling only, not a build step.",
+  "scripts": {
+    "validate:knowledge": "node scripts/validate-knowledge.js",
+    "validate:twin": "node scripts/check-twin-grounding.js && node scripts/check-fallback.js",
+    "test:twin": "node scripts/test-twin-engine.js",
+    "sync:twin": "node scripts/sync-twin-chips.js",
+    "precommit": "npm run validate:knowledge && npm run validate:twin && npm run test:twin"
+  }
+}
