@@ -56,6 +56,20 @@
       "answer": "Meghna is a curious builder and explorer who enjoys learning by building things. She's curious about how technology can solve everyday problems, and likes experimenting with new tools, turning ideas into projects, and learning something new along the way."
     },
     {
+      "id": "portfolio",
+      "topics": ["portfolio", "about"],
+      "keywords": [
+        "her portfolio",
+        "this portfolio",
+        "about her portfolio",
+        "portfolio overview",
+        "tell me about her portfolio",
+        "what is this portfolio",
+        "about this portfolio"
+      ],
+      "answer": "This portfolio showcases Meghna, a B.Tech (AI & ML) student at Atria University in Bengaluru, Karnataka, who enjoys learning by building things. It features four projects — TasteOrbit, Project Panopticon, Automated Invoice Processing & Anomaly Detection, and Memory of a City — plus a Digital Twin chat widget you can ask about her background and work."
+    },
+    {
       "id": "projects-overview",
       "topics": ["projects"],
       "keywords": [
@@ -73,7 +87,7 @@
     },
     {
       "id": "tasteorbit",
-      "topics": ["projects", "data-science"],
+      "topics": ["projects", "data-science", "tasteorbit"],
       "keywords": [
         "tasteorbit",
         "taste orbit",
@@ -82,11 +96,27 @@
         "restaurant quality",
         "restaurant prediction"
       ],
-      "answer": "TasteOrbit: Restaurant Insights & Quality Prediction is a classification model predicting whether Bengaluru restaurants are highly rated, using a Zomato dataset — location, cuisine, cost, and vote count as features. It reaches about 85.7% validation accuracy with Logistic Regression, built with Python, Scikit-Learn, and Pandas."
+      "data": {
+        "name": "TasteOrbit",
+        "fullName": "TasteOrbit: Restaurant Insights & Quality Prediction",
+        "domain": "Data Science",
+        "summary": "TasteOrbit: Restaurant Insights & Quality Prediction is a classification model predicting whether Bengaluru restaurants are highly rated, using a Zomato dataset — location, cuisine, cost, and vote count as features.",
+        "purpose": "To predict whether a Bengaluru restaurant will be highly rated.",
+        "problem": "Determining restaurant quality/rating from available data such as location, cuisine, cost, and vote count.",
+        "technologies": ["Python", "Scikit-Learn", "Pandas"],
+        "features": [
+          "Classifies whether a restaurant is highly rated or not",
+          "Uses a Zomato dataset with location, cuisine, cost, and vote count as features",
+          "Trained with a Logistic Regression model"
+        ],
+        "implementation": "Uses a Zomato dataset with location, cuisine, cost, and vote count as input features, classified with a Logistic Regression model.",
+        "outcome": "Reaches about 85.7% validation accuracy with Logistic Regression.",
+        "githubUrl": "https://github.com/Meghna-K03/-TasteOrbit-Restaurant-Insights-Quality-Prediction"
+      }
     },
     {
       "id": "panopticon",
-      "topics": ["projects", "machine-learning"],
+      "topics": ["projects", "machine-learning", "panopticon"],
       "keywords": [
         "panopticon",
         "project panopticon",
@@ -95,11 +125,28 @@
         "proctor",
         "intelligent exam"
       ],
-      "answer": "Project Panopticon: Intelligent Exam Proctoring is a precision-first exam-proctoring pipeline Meghna built during an AI internship. It merges asynchronous video and system-event telemetry, engineers rolling-window features, and raises the decision threshold to 90% confidence to eliminate false cheating accusations. Built with Python, Pandas, Scikit-Learn, and Random Forest."
+      "data": {
+        "name": "Project Panopticon",
+        "fullName": "Project Panopticon: Intelligent Exam Proctoring",
+        "domain": "Machine Learning",
+        "summary": "Project Panopticon: Intelligent Exam Proctoring is a precision-first exam-proctoring pipeline built during an AI internship.",
+        "purpose": "To proctor exams while eliminating false cheating accusations.",
+        "problem": "Reliably detecting cheating in exams without wrongly flagging honest students.",
+        "technologies": ["Python", "Pandas", "Scikit-Learn", "Random Forest"],
+        "features": [
+          "Merges asynchronous video and system-event telemetry",
+          "Engineers rolling-window features from that telemetry",
+          "Raises the decision threshold to 90% confidence to reduce false positives"
+        ],
+        "implementation": "Merges asynchronous video and system-event telemetry, engineers rolling-window features, and classifies with a Random Forest model using a 90% confidence decision threshold.",
+        "outcome": "Raising the decision threshold to 90% confidence eliminates false cheating accusations.",
+        "role": "Built during an AI internship.",
+        "githubUrl": "https://github.com/Meghna-K03/Project-Panopticon"
+      }
     },
     {
       "id": "invoice-processing",
-      "topics": ["projects", "automation"],
+      "topics": ["projects", "automation", "invoice-processing"],
       "keywords": [
         "invoice",
         "invoice processing",
@@ -107,11 +154,26 @@
         "ocr",
         "tesseract"
       ],
-      "answer": "Automated Invoice Processing & Anomaly Detection is an end-to-end pipeline that reads invoice images, extracts fields (invoice number, vendor, amount) via OpenCV preprocessing, Tesseract OCR, and regex, then flags suspicious invoices using Z-score and Isolation Forest. It processed 117 invoices at a 94.8% parsing success rate, built with Python, OpenCV, Tesseract, and Scikit-Learn."
+      "data": {
+        "name": "Automated Invoice Processing & Anomaly Detection",
+        "fullName": "Automated Invoice Processing & Anomaly Detection",
+        "domain": "Automation",
+        "summary": "Automated Invoice Processing & Anomaly Detection is an end-to-end pipeline that reads invoice images, extracts fields (invoice number, vendor, amount), then flags suspicious invoices.",
+        "purpose": "To automate reading invoices and detecting anomalous/suspicious ones.",
+        "problem": "Manually processing invoices and spotting anomalies is slow and error-prone.",
+        "technologies": ["Python", "OpenCV", "Tesseract", "Scikit-Learn"],
+        "features": [
+          "Extracts invoice number, vendor, and amount via OpenCV preprocessing, Tesseract OCR, and regex",
+          "Flags suspicious invoices using Z-score and Isolation Forest anomaly detection"
+        ],
+        "implementation": "Preprocesses invoice images with OpenCV, extracts fields with Tesseract OCR and regex, then flags anomalies using Z-score and Isolation Forest.",
+        "outcome": "Processed 117 invoices at a 94.8% parsing success rate.",
+        "githubUrl": "https://github.com/Meghna-K03/Invoice-processing-and-anomaly-detection-project"
+      }
     },
     {
       "id": "memory-of-a-city",
-      "topics": ["projects", "full-stack"],
+      "topics": ["projects", "full-stack", "memory-of-a-city"],
       "keywords": [
         "memory of a city",
         "city change investigator",
@@ -119,7 +181,22 @@
         "koramangala",
         "whitefield"
       ],
-      "answer": "Memory of a City is a Bengaluru-focused urban intelligence site exploring how three neighbourhoods — Indiranagar, Koramangala, and Whitefield — changed between 2010 and 2026, with an AI \"City Change Investigator\" that explains what might account for the change, grounded only in the site's own prepared dataset (never invents facts or statistics). Built with React, Vite, Node.js/Express, and the Gemini API."
+      "data": {
+        "name": "Memory of a City",
+        "fullName": "Memory of a City",
+        "domain": "Full-Stack / AI",
+        "summary": "Memory of a City is a Bengaluru-focused urban intelligence site exploring how three neighbourhoods — Indiranagar, Koramangala, and Whitefield — changed between 2010 and 2026.",
+        "purpose": "To explore and explain how three Bengaluru neighbourhoods changed over time.",
+        "problem": "Understanding what might account for urban change in these neighbourhoods, grounded only in the site's prepared dataset.",
+        "technologies": ["React", "Vite", "Node.js/Express", "Gemini API"],
+        "features": [
+          "Explores change across three neighbourhoods — Indiranagar, Koramangala, and Whitefield — between 2010 and 2026",
+          "Includes an AI \"City Change Investigator\" that explains what might account for the change",
+          "The AI investigator is grounded only in the site's own prepared dataset and never invents facts or statistics"
+        ],
+        "implementation": "A React/Vite frontend with a Node.js/Express backend; the \"City Change Investigator\" feature uses the Gemini API, grounded only in the site's own prepared dataset.",
+        "githubUrl": "https://github.com/Meghna-K03/Memory-of--a-city"
+      }
     },
     {
       "id": "skills-stack",

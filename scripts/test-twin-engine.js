@@ -149,5 +149,118 @@ test('TEST11 all four current projects have knowledge entries', () => {
   required.forEach((id) => assert.ok(ids.has(id), `missing knowledge entry for "${id}"`));
 });
 
+// TEST 12: tech-stack question variants all resolve to the same project + field
+test('TEST12 tech-stack question variants -> tasteorbit technologies', () => {
+  const variants = [
+    'What technologies were used in TasteOrbit?',
+    'What is the tech stack of TasteOrbit?',
+    'What was TasteOrbit built with?',
+    'What tools were used for TasteOrbit?',
+  ];
+  variants.forEach((q) => {
+    const { text, entryId } = TwinEngine.retrieveAnswer(knowledge, q, {});
+    assert.strictEqual(entryId, 'tasteorbit', `for "${q}"`);
+    assert.ok(text.includes('Scikit-Learn'), `for "${q}" got: ${text}`);
+  });
+});
+
+// TEST 13: features question -> documented features only
+test('TEST13 "What are the features of Project Panopticon?" -> documented features', () => {
+  const { text, entryId } = TwinEngine.retrieveAnswer(knowledge, 'What are the main features of Project Panopticon?', {});
+  assert.strictEqual(entryId, 'panopticon');
+  assert.ok(text.includes('rolling-window'));
+});
+
+// TEST 14: purpose/problem questions
+test('TEST14 purpose/problem questions -> documented purpose/problem', () => {
+  const purpose = TwinEngine.retrieveAnswer(knowledge, 'What is the purpose of TasteOrbit?', {});
+  assert.strictEqual(purpose.entryId, 'tasteorbit');
+  assert.ok(purpose.text.toLowerCase().includes('predict'));
+
+  const problem = TwinEngine.retrieveAnswer(knowledge, 'What problem does the invoice processing project solve?', {});
+  assert.strictEqual(problem.entryId, 'invoice-processing');
+});
+
+// TEST 15: summarization variants produce project-specific, non-identical answers
+test('TEST15 short vs detailed summary differ and stay grounded', () => {
+  const short = TwinEngine.retrieveAnswer(knowledge, 'Summarize TasteOrbit.', {});
+  const detailed = TwinEngine.retrieveAnswer(knowledge, 'Give me a detailed explanation of TasteOrbit.', {});
+  assert.strictEqual(short.entryId, 'tasteorbit');
+  assert.strictEqual(detailed.entryId, 'tasteorbit');
+  assert.notStrictEqual(short.text, detailed.text);
+  assert.ok(detailed.text.length > short.text.length);
+});
+
+// TEST 16: role/timeline — documented (Panopticon role) vs undocumented (TasteOrbit role, any builtWhen) -> exact fallback
+test('TEST16 role/timeline: documented answers, undocumented falls back exactly', () => {
+  const role = TwinEngine.retrieveAnswer(knowledge, "What was Meghna's role in Project Panopticon?", {});
+  assert.strictEqual(role.entryId, 'panopticon');
+  assert.ok(role.text.includes('internship'));
+
+  const noRole = TwinEngine.retrieveAnswer(knowledge, "What was Meghna's role in TasteOrbit?", {});
+  assert.strictEqual(noRole.text, knowledge.meta.fallback);
+
+  const noDate = TwinEngine.retrieveAnswer(knowledge, 'When was TasteOrbit built?', {});
+  assert.strictEqual(noDate.text, knowledge.meta.fallback);
+});
+
+// TEST 17: logical/cross-project questions
+test('TEST17 logical questions resolve from documented fields only', () => {
+  const ocr = TwinEngine.retrieveAnswer(knowledge, 'Which project uses OCR?', {});
+  assert.ok(ocr.text.includes('Invoice'), `got: ${ocr.text}`);
+
+  const anomaly = TwinEngine.retrieveAnswer(knowledge, 'Which project involves anomaly detection?', {});
+  assert.ok(anomaly.text.includes('Invoice'), `got: ${anomaly.text}`);
+
+  const urban = TwinEngine.retrieveAnswer(knowledge, 'Which project is related to urban change?', {});
+  assert.ok(urban.text.includes('Memory of a City'), `got: ${urban.text}`);
+
+  const unsupported = TwinEngine.retrieveAnswer(knowledge, 'Which project uses computer vision?', {});
+  assert.strictEqual(unsupported.text, knowledge.meta.fallback, 'computer vision is not literally documented, must fall back');
+});
+
+// TEST 18: comparison — only documented, shared fields; ambiguous compare -> fallback
+test('TEST18 comparison uses only documented shared fields', () => {
+  const cmp = TwinEngine.retrieveAnswer(knowledge, 'Compare TasteOrbit and Memory of a City.', {});
+  assert.ok(cmp.text.includes('TasteOrbit') && cmp.text.includes('Memory of a City'));
+
+  const ambiguous = TwinEngine.retrieveAnswer(knowledge, 'What is similar between these two projects?', {});
+  assert.strictEqual(ambiguous.text, knowledge.meta.fallback, 'cannot compare without two named projects');
+});
+
+// TEST 19: follow-up context — "it" resolves to the last project discussed
+test('TEST19 follow-up pronoun resolves via lightweight context', () => {
+  let ctx = {};
+  let r = TwinEngine.retrieveAnswer(knowledge, 'Tell me about Memory of a City.', ctx);
+  ctx.currentTopic = r.topic;
+  assert.strictEqual(ctx.currentTopic, 'memory-of-a-city');
+
+  r = TwinEngine.retrieveAnswer(knowledge, 'What technologies did it use?', ctx);
+  ctx.currentTopic = r.topic;
+  assert.strictEqual(r.entryId, 'memory-of-a-city');
+  assert.ok(r.text.includes('Gemini'));
+
+  // Switching topic updates context.
+  r = TwinEngine.retrieveAnswer(knowledge, 'Tell me about TasteOrbit.', ctx);
+  ctx.currentTopic = r.topic;
+  assert.strictEqual(ctx.currentTopic, 'tasteorbit');
+
+  r = TwinEngine.retrieveAnswer(knowledge, 'Summarize it.', ctx);
+  assert.strictEqual(r.entryId, 'tasteorbit');
+});
+
+// TEST 20: unknown personal/off-topic questions still fall back exactly
+test('TEST20 unknown personal questions -> exact fallback', () => {
+  const questions = [
+    "What is Meghna's favorite movie?",
+    "What is Meghna's favorite food?",
+    'What is Meghna planning to build next year?',
+  ];
+  questions.forEach((q) => {
+    const { text } = TwinEngine.retrieveAnswer(knowledge, q, {});
+    assert.strictEqual(text, knowledge.meta.fallback, `for "${q}"`);
+  });
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

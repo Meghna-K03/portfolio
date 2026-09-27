@@ -55,16 +55,27 @@ is not done if only one is updated:
    editing) — copy the same card into the same position there.
 
 5. **Add the knowledge.json entry.** Use the `twin-knowledge-base` skill's
-   schema. Generate:
+   project schema (a structured `data` object, not a single `answer`
+   string — see that skill for the full field list). Generate:
    - `id`: kebab-case, derived from the project title, unique.
-   - `topics`: `["projects", "<category-tag>"]` matching the card's
+   - `topics`: `["project", "<id>", "<category-tag>"]` matching the card's
      category.
    - `keywords`: the project's title (and a natural variant or two, e.g.
      with/without spaces), plus one or two domain-specific terms from the
      description — mirror how the existing four project entries do this.
-   - `answer`: reuse the same description you put on the card, near
-     verbatim, plus the technology list, in 1–3 sentences. Do not add
-     claims beyond what the user told you.
+   - `data.name` (required) and `data.fullName`/`data.domain` from the
+     title/category the user gave.
+   - `data.summary`: reuse the same description you put on the card, near
+     verbatim.
+   - `data.technologies`: the technology tag list.
+   - `data.purpose` / `data.problem` / `data.features` / `data.implementation`
+     / `data.outcome` / `data.role`: only include the ones the user's
+     description actually supports — decomposing one sentence into a
+     `features` bullet is fine, inventing a new claim is not. Omit the key
+     entirely (do not write a placeholder value) for anything not given.
+   - `data.githubUrl`: only if the user gave a link; otherwise omit it —
+     don't invent one (matches the card's own `href="#"` + TODO rule
+     above).
 
 6. **Validate.** Run, in order:
    - `npm run validate:knowledge`

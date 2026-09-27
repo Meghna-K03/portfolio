@@ -27,6 +27,13 @@ section before using it if you haven't already.
 
 ## Schema
 
+There are two entry shapes. A **simple fact** (identity, education,
+interests, skills, location, a portfolio overview) answers with one fixed
+`answer` string. A **project** entry answers many different questions
+(purpose, tech stack, features, ...) built at query time from a
+structured `data` object — never invent a project's `answer` field by
+hand.
+
 ```json
 {
   "meta": {
@@ -39,28 +46,59 @@ section before using it if you haven't already.
       "topics": ["one-or-more", "grouping-tags"],
       "keywords": ["phrases", "or substrings", "used for matching"],
       "chip": "Optional: a short question for the quick-question chips",
-      "answer": "The exact, portfolio-grounded answer text."
+      "answer": "The exact, portfolio-grounded answer text (simple facts only)."
+    },
+    {
+      "id": "project-kebab-id",
+      "topics": ["project", "project-kebab-id", "category-tag"],
+      "keywords": ["project name", "aliases", "domain-specific terms"],
+      "data": {
+        "name": "Short display name",
+        "fullName": "Full title, if different from name",
+        "domain": "Category shown on the project card (e.g. Data Science)",
+        "summary": "1-2 sentence description, reused from the project card.",
+        "purpose": "What the project is for — only if distinctly documented.",
+        "problem": "What problem/challenge it addresses — only if documented.",
+        "technologies": ["Only", "technologies", "actually listed"],
+        "features": ["Decomposed, factual bullet points from the description"],
+        "implementation": "How it works — only if documented.",
+        "outcome": "A stated result/metric — only if documented.",
+        "role": "Meghna's stated role/context — only if documented.",
+        "builtWhen": "A stated build date — only if documented (rare).",
+        "status": "A stated project status — only if documented (rare).",
+        "githubUrl": "The project's own repo link, if shown on its card."
+      }
     }
   ]
 }
 ```
 
-Field rules:
+Field rules (both shapes):
 - `id` — kebab-case, unique across all entries. Validated by
   `scripts/validate-knowledge.js`.
-- `topics` — non-empty array of lowercase tag strings (e.g. `projects`,
-  `education`, `skills`). Used for light topic-word scoring and for
-  grouping in future tooling.
+- `topics` — non-empty array of lowercase tag strings. For a project
+  entry, include `"project"` plus the entry's own id plus a category tag
+  matching the project card (`"data-science"`, `"machine-learning"`,
+  `"automation"`, `"full-stack"`, etc.).
 - `keywords` — non-empty array of lowercase phrases or substrings a user
-  might type. The retrieval engine does case-insensitive substring
-  matching, so prefer natural phrases ("who is meghna", "what does she
-  study") over single generic words where possible, to avoid
-  over-matching unrelated questions.
-- `chip` — optional. Only set this for entries that should appear as a
-  quick-question suggestion button. `/sync-twin` regenerates the chip
-  buttons from every entry that has this field, in `knowledge.json` order.
-- `answer` — the exact text the twin will send back verbatim. Write it in
-  complete sentences; it's shown as-is in the chat bubble.
+  might type. This is also how the retrieval engine's entity detector
+  recognizes "the user is asking about this specific project" before
+  looking at intent — so cover the name, common variants, and 1-2
+  domain-specific terms (a dataset name, a technique).
+- `chip` — optional, quick-question chip. Unchanged from before.
+
+`data` object rules (project entries only):
+- `name` is required; everything else is optional and MUST be omitted
+  entirely — not left as an empty string or a guess — when the portfolio
+  doesn't state it. The retrieval engine checks for the field's presence
+  and returns the *exact* `meta.fallback` string when it's missing; it
+  never fabricates a placeholder sentence like "not documented".
+- `technologies` and `features` are arrays of short, factual strings.
+  `features` may be the project's description decomposed into bullet
+  points (that's re-segmenting a documented fact, not inventing one) —
+  but never add a bullet that states something beyond what's written.
+- Common miss: don't invent `builtWhen`/`role`/`status`/`outcome` just
+  because the schema has a slot for them. Leave the key out.
 
 ## Choosing keywords
 
@@ -74,29 +112,59 @@ Field rules:
   entry (e.g. don't key the TasteOrbit entry only on "restaurant" if that
   word could plausibly appear in an unrelated question) — pair specific
   and general terms.
+- For a project entry, a keyword that's also a distinguishing fact (e.g.
+  "ocr", "anomaly detection") lets a logical question like "which project
+  uses OCR?" resolve straight to that project. That's fine and intended.
 
 ## Choosing topics
 
 - Reuse existing topic tags already in `knowledge.json` where the new
   entry fits one (`projects`, `identity`, `education`, `interests`,
-  `skills`, `location`) instead of inventing near-duplicates.
-- A project entry should include `"projects"` plus one more specific tag
-  (`"data-science"`, `"machine-learning"`, `"automation"`,
-  `"full-stack"`, etc.) matching the category shown on its project card.
+  `skills`, `location`, `portfolio`) instead of inventing near-duplicates.
+- A project entry should include `"project"` plus its own id plus one
+  category tag matching the project card.
 
-## Writing the answer
+## Writing simple-fact answers
 
-- State only what's on the page. Reuse the project card's description
-  almost verbatim for project entries — that description is already the
-  approved, fact-checked text.
-- Keep it to 1–3 sentences. This is a chat bubble, not a full page.
+- State only what's on the page. Keep it to 1–3 sentences. This is a chat
+  bubble, not a full page.
 - Never write a second, slightly different fallback message here — the
   fallback always comes from `meta.fallback` alone.
+
+## Writing project `data` fields
+
+- Reuse the project card's description almost verbatim for `summary` —
+  that text is already approved and fact-checked.
+- Where the description has clearly separable ideas (e.g. "merges video
+  and telemetry" vs. "raises the threshold to 90% confidence"), split
+  them across `implementation`/`features`/`outcome` rather than repeating
+  one undivided paragraph in every field — but do not add words that
+  change the meaning.
+- Never write a value for `purpose`, `role`, `builtWhen`, `outcome`, or
+  `status` that isn't a direct restatement of something already written
+  somewhere in the portfolio.
+
+## The retrieval engine's intent system (for context, not to hand-edit)
+
+`code.html`'s twin engine block (between `<!-- TWIN-ENGINE:START -->` and
+`<!-- TWIN-ENGINE:END -->`) does, in order: (1) comparison detection —
+"compare X and Y" — using only fields present on both named projects; (2)
+explicit project-name / follow-up-pronoun detection, then an "intent"
+regex table (tech stack, features, purpose, problem, role, timeline,
+domain, outcome, implementation, short/detailed summary) picks which
+`data` field(s) to answer from; (3) a generic cross-project search
+("which project uses OCR?") over all projects' `data` fields, used only
+when no specific project was named; (4) the old keyword/topic scored
+match against the simple `answer` entries; (5) `meta.fallback`. None of
+this branches on individual facts — it only reads `entry.data.<field>` —
+so adding a new project's `data` object is enough; you should not need to
+touch the engine itself for a new project or fact.
 
 ## After editing knowledge.json
 
 1. Run `npm run validate:knowledge` — schema check (unique ids, required
-   fields, non-empty arrays/strings).
+   fields, non-empty arrays/strings, and — for project entries — at least
+   one descriptive `data` field).
 2. Run `npm run test:twin` — confirms the retrieval engine still resolves
    sample questions to the right entries and unrelated questions still
    fall through to the fallback.
@@ -106,12 +174,18 @@ Field rules:
 
 ## What never to do
 
-- Never add a new `if (query.includes(...)) { return "..." }` branch to
-  the twin's `<script>` block in `code.html` — that's exactly the
-  hardcoded pattern this project moved away from, and
-  `scripts/check-twin-grounding.js` will fail on it.
+- Never add a new `if (query.includes(...)) { return "..." }` branch, or
+  a new hardcoded per-fact `if`/`else` in the intent handling, to the
+  twin's `<script>` block in `code.html` — that's exactly the hardcoded
+  pattern this project moved away from, and
+  `scripts/check-twin-grounding.js` will fail on a reintroduced literal
+  keyword branch.
 - Never write a fact directly into `code.html`'s script and skip
   `knowledge.json` — the UI only renders/queries the knowledge base, it
   never states facts itself.
 - Never duplicate the fallback sentence as a second string literal
   anywhere — `scripts/check-fallback.js` will fail on it.
+- Never fill a missing `data` field with a guess, a placeholder sentence,
+  or an inferred category (e.g. don't label a project "computer vision"
+  just because it uses OpenCV, unless the portfolio itself says so) — an
+  unanswerable field must fall through to the exact fallback string.

@@ -708,11 +708,17 @@
     // Loaded once on page init and cached — never re-fetched per message.
     let twinKnowledge = null;
 
+    // Lightweight local conversation context (currentTopic only) so a
+    // follow-up like "summarize it" can resolve "it" to the last project
+    // discussed. Never sent anywhere, never persisted — in-memory only.
+    let twinContext = { currentTopic: null };
+
     function normalizeQuery(str) {
-      return String(str || '').toLowerCase().trim();
+      return String(str || '').toLowerCase().trim().replace(/\s+/g, ' ');
     }
 
-    // Substring/keyword match count against one knowledge entry.
+    // Substring/keyword match count against one knowledge entry. Used for
+    // the plain single-fact entries (identity, education, interests, ...).
     function scoreEntry(query, entry) {
       const q = normalizeQuery(query);
       let score = 0;
@@ -728,17 +734,257 @@
     // Minimum score an entry must reach to be returned instead of the fallback.
     const TWIN_MATCH_THRESHOLD = 1;
 
-    // Pure retrieval function: knowledge in, answer out. No DOM, no network —
-    // this is what scripts/test-twin-engine.js exercises directly.
-    function retrieveAnswer(knowledge, query) {
+    function isProjectEntry(entry) {
+      return !!(entry && entry.data && typeof entry.data === 'object');
+    }
+
+    function getProjectEntries(knowledge) {
+      return (knowledge.entries || []).filter(isProjectEntry);
+    }
+
+    function getSimpleEntries(knowledge) {
+      return (knowledge.entries || []).filter((e) => typeof e.answer === 'string' && e.answer.trim() !== '');
+    }
+
+    // Which project(s) does this query mention by name/alias? Reuses the
+    // same keywords array every entry already declares.
+    function detectProjectEntities(query, projectEntries) {
+      const q = normalizeQuery(query);
+      return projectEntries.filter((entry) => (entry.keywords || []).some((kw) => kw && q.includes(String(kw).toLowerCase())));
+    }
+
+    const PRONOUN_FOLLOWUP_RE = /\b(it|its|this project|that project|the project|this one|that one)\b/i;
+    const COMPARE_TRIGGER_RE = /\bcompare\b|\bvs\.?\b|\bversus\b|\bdifference(s)? between\b|\bsimilar(ities)? between\b|how (are|is)[\s\S]*different/i;
+    const LOGICAL_TRIGGER_RE = /\b(which|what)\b[\s\S]*\bprojects?\b[\s\S]*\b(use[sd]?|using|involve[sd]?|involving|related to|relates to|about|built with|made with|solves?|solving)\b/i;
+
+    // Ordered most-specific-first. First matching pattern wins; falls
+    // through to "overview" when nothing else matches.
+    const INTENT_PATTERNS = [
+      { intent: 'tech_stack', re: /tech(nology|nologies)?[\s-]*stack|technolog(y|ies)|tools? (used|were used)|built with|made with|what (was|is|were).*(built|made) with/i },
+      { intent: 'features', re: /\bfeatures?\b|what (does|can) it do|main functions?|capabilit(y|ies)/i },
+      { intent: 'purpose', re: /\bpurpose\b|why (was|is) it (built|made|created)|\bgoal\b|\baim\b/i },
+      { intent: 'problem', re: /\bproblem\b|what.*(solve|solves|solved)|issue(s)? (does|it) (solve|address)/i },
+      { intent: 'role', re: /\brole\b|responsib|what did (she|meghna) do/i },
+      { intent: 'timeline', re: /\bwhen\b[\s\S]*(built|made|created)|built when|\btimeline\b|\bdate\b/i },
+      { intent: 'domain', re: /\bdomain\b|what (kind|type) of project|\bcategory\b/i },
+      { intent: 'outcome', re: /\boutcome\b|\bresult(s)?\b|\baccuracy\b|what happened/i },
+      { intent: 'implementation', re: /how does.*work|how.*(it|does).*work|\bimplementation\b|\barchitecture\b|how (is|was) it (built|made)/i },
+      { intent: 'detailed_summary', re: /detailed explanation|explain.*(detail|depth)|everything (important|about)|tell me everything|in detail|comprehensive/i },
+      { intent: 'short_summary', re: /short summary|summar(y|ize)|briefly|tl;?dr|give me a summary/i },
+      { intent: 'explanation', re: /\bexplain\b|simply|simple (words|terms)|in plain (words|terms|english)/i },
+    ];
+
+    function detectIntent(query) {
+      const q = normalizeQuery(query);
+      for (let i = 0; i < INTENT_PATTERNS.length; i += 1) {
+        if (INTENT_PATTERNS[i].re.test(q)) return INTENT_PATTERNS[i].intent;
+      }
+      return 'overview';
+    }
+
+    function fieldStr(entry, key) {
+      const v = entry.data[key];
+      return typeof v === 'string' && v.trim() !== '' ? v : null;
+    }
+
+    function fieldList(entry, key) {
+      const v = entry.data[key];
+      return Array.isArray(v) && v.length > 0 ? v : null;
+    }
+
+    function buildFieldAnswer(entry, key, label, isList) {
+      const val = isList ? fieldList(entry, key) : fieldStr(entry, key);
+      if (!val) return null;
+      const text = isList ? val.join(', ') : val;
+      const sentence = `${entry.data.name} — ${label}: ${text}.`;
+      return sentence;
+    }
+
+    function buildOverviewAnswer(entry) {
+      const summary = fieldStr(entry, 'summary') || fieldStr(entry, 'fullName') || entry.data.name;
+      return summary;
+    }
+
+    function buildShortAnswer(entry) {
+      const parts = [];
+      parts.push(fieldStr(entry, 'summary') || entry.data.name);
+      const purpose = fieldStr(entry, 'purpose') || fieldStr(entry, 'problem');
+      if (purpose) parts.push(purpose);
+      const tech = fieldList(entry, 'technologies');
+      if (tech) parts.push(`Built with ${tech.join(', ')}.`);
+      return parts.join(' ');
+    }
+
+    function buildDetailedAnswer(entry) {
+      const parts = [];
+      const summary = fieldStr(entry, 'summary');
+      if (summary) parts.push(summary);
+      const purpose = fieldStr(entry, 'purpose');
+      if (purpose) parts.push(`Purpose: ${purpose}`);
+      const problem = fieldStr(entry, 'problem');
+      if (problem) parts.push(`Problem: ${problem}`);
+      const domain = fieldStr(entry, 'domain');
+      if (domain) parts.push(`Domain: ${domain}.`);
+      const tech = fieldList(entry, 'technologies');
+      if (tech) parts.push(`Technologies: ${tech.join(', ')}.`);
+      const features = fieldList(entry, 'features');
+      if (features) parts.push(`Features: ${features.join('; ')}.`);
+      const implementation = fieldStr(entry, 'implementation');
+      if (implementation) parts.push(`Implementation: ${implementation}`);
+      const outcome = fieldStr(entry, 'outcome');
+      if (outcome) parts.push(`Outcome: ${outcome}`);
+      const role = fieldStr(entry, 'role');
+      if (role) parts.push(`Role: ${role}`);
+      return parts.join(' ');
+    }
+
+    const INTENT_HANDLERS = {
+      tech_stack: (e) => buildFieldAnswer(e, 'technologies', 'technologies', true),
+      features: (e) => buildFieldAnswer(e, 'features', 'features', true),
+      purpose: (e) => buildFieldAnswer(e, 'purpose', 'purpose', false),
+      problem: (e) => buildFieldAnswer(e, 'problem', 'problem', false),
+      role: (e) => buildFieldAnswer(e, 'role', 'role', false),
+      timeline: (e) => buildFieldAnswer(e, 'builtWhen', 'built', false),
+      domain: (e) => buildFieldAnswer(e, 'domain', 'domain', false),
+      outcome: (e) => buildFieldAnswer(e, 'outcome', 'outcome', false),
+      implementation: (e) => buildFieldAnswer(e, 'implementation', 'implementation', false),
+      detailed_summary: buildDetailedAnswer,
+      short_summary: buildShortAnswer,
+      explanation: buildShortAnswer,
+      overview: buildOverviewAnswer,
+    };
+
+    // Only compares fields present on BOTH projects — never invents a
+    // difference and never ranks one project above the other.
+    function buildComparisonAnswer(entryA, entryB) {
+      const fieldsToCompare = [
+        { key: 'domain', label: 'domain', isList: false },
+        { key: 'purpose', label: 'purpose', isList: false },
+        { key: 'technologies', label: 'technologies', isList: true },
+        { key: 'features', label: 'features', isList: true },
+      ];
+      const parts = [];
+      fieldsToCompare.forEach(({ key, label, isList }) => {
+        const aVal = isList ? fieldList(entryA, key) : fieldStr(entryA, key);
+        const bVal = isList ? fieldList(entryB, key) : fieldStr(entryB, key);
+        if (aVal && bVal) {
+          const aText = isList ? aVal.join(', ') : aVal;
+          const bText = isList ? bVal.join(', ') : bVal;
+          const line = `${label} — ${entryA.data.name}: ${aText}; ${entryB.data.name}: ${bText}.`;
+          parts.push(line);
+        }
+      });
+      if (parts.length === 0) return null;
+      const header = `Comparing ${entryA.data.name} and ${entryB.data.name}.`;
+      return [header].concat(parts).join(' ');
+    }
+
+    const LOGICAL_STOPWORDS = new Set(['a', 'an', 'the', 'is', 'are', 'does', 'do', 'did', 'which', 'what', 'project', 'projects', 'that', 'uses', 'use', 'using', 'used', 'involve', 'involves', 'involving', 'involved', 'related', 'relate', 'relates', 'to', 'about', 'of', 'in', 'on', 'for', 'with', 'and']);
+
+    function buildProjectHaystack(entry) {
+      const d = entry.data;
+      const chunks = [
+        d.name, d.fullName, d.summary, d.purpose, d.problem, d.domain,
+        d.outcome, d.role, d.implementation,
+        (d.technologies || []).join(' '), (d.features || []).join(' '),
+      ];
+      return chunks.filter(Boolean).join(' ').toLowerCase();
+    }
+
+    function extractLogicalPhrase(query) {
+      let q = normalizeQuery(query).replace(/[?.!]/g, '');
+      q = q.replace(/^(which|what)\s+projects?\s*/, '').replace(/^projects?\s*/, '');
+      q = q.replace(/\b(is|are|does|do|did)\b/g, ' ');
+      q = q.replace(/\b(that\s+)?(uses?|using|used|involve[sd]?|involving|relate[sd]?|related|relating)\b/g, ' ');
+      q = q.replace(/\bto\b/g, ' ');
+      return q.replace(/\s+/g, ' ').trim();
+    }
+
+    function searchProjectsByPhrase(projectEntries, phrase) {
+      const cleanPhrase = phrase.trim();
+      if (!cleanPhrase) return [];
+      let matches = projectEntries.filter((e) => buildProjectHaystack(e).includes(cleanPhrase));
+      if (matches.length === 0) {
+        const words = cleanPhrase.split(/\s+/).filter((w) => w.length > 2 && !LOGICAL_STOPWORDS.has(w));
+        if (words.length > 0) {
+          matches = projectEntries.filter((e) => {
+            const hay = buildProjectHaystack(e);
+            return words.some((w) => {
+              if (w.length <= 3) {
+                const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                return new RegExp(`\\b${escaped}\\b`).test(hay);
+              }
+              return hay.includes(w);
+            });
+          });
+        }
+      }
+      return matches;
+    }
+
+    function buildLogicalAnswer(matches) {
+      if (matches.length === 0) return null;
+      const names = matches.map((e) => e.data.name);
+      return names.length === 1 ? `${names[0]} matches that.` : `These projects match: ${names.join(', ')}.`;
+    }
+
+    // Pure retrieval function: knowledge (+ query + lightweight context) in,
+    // answer out. No DOM, no network — this is what
+    // scripts/test-twin-engine.js exercises directly. `context` is never
+    // mutated here; the caller decides whether to keep the returned `topic`.
+    function retrieveAnswer(knowledge, query, context) {
+      context = context || {};
       if (!knowledge || !knowledge.meta || !Array.isArray(knowledge.entries)) {
-        return { text: (knowledge && knowledge.meta && knowledge.meta.fallback) || '', entryId: null, score: 0 };
+        return { text: (knowledge && knowledge.meta && knowledge.meta.fallback) || '', entryId: null, score: 0, topic: context.currentTopic || null };
       }
 
+      const fallback = knowledge.meta.fallback;
+      const projectEntries = getProjectEntries(knowledge);
+      const simpleEntries = getSimpleEntries(knowledge);
+
+      // 1. Comparison — needs two named projects; never guesses a partner.
+      if (COMPARE_TRIGGER_RE.test(query)) {
+        const entities = detectProjectEntities(query, projectEntries);
+        if (entities.length >= 2) {
+          const text = buildComparisonAnswer(entities[0], entities[1]);
+          if (text) return { text, entryId: `${entities[0].id},${entities[1].id}`, score: 2, topic: context.currentTopic || null };
+        }
+        return { text: fallback, entryId: null, score: 0, topic: context.currentTopic || null };
+      }
+
+      // 2. Explicit project mention, or a resolvable follow-up pronoun. This
+      // is checked BEFORE the logical-search trigger below: a query that
+      // names a specific project (e.g. "What was Project Panopticon built
+      // with?") always wins over the generic cross-project search, even
+      // though the project's own name contains the word "project".
+      let entities = detectProjectEntities(query, projectEntries);
+      if (entities.length === 0 && PRONOUN_FOLLOWUP_RE.test(query) && context.currentTopic) {
+        const resolved = projectEntries.find((e) => e.id === context.currentTopic);
+        if (resolved) entities = [resolved];
+      }
+
+      if (entities.length > 0) {
+        const primary = entities[0];
+        const intent = detectIntent(query);
+        const handler = INTENT_HANDLERS[intent] || buildOverviewAnswer;
+        const text = handler(primary) || fallback;
+        return { text, entryId: primary.id, score: 1, topic: primary.id };
+      }
+
+      // 3. Logical/cross-project search — "which project uses OCR?" — only
+      // reached when no specific project was named above.
+      if (LOGICAL_TRIGGER_RE.test(query)) {
+        const phrase = extractLogicalPhrase(query);
+        const matches = searchProjectsByPhrase(projectEntries, phrase);
+        const text = buildLogicalAnswer(matches);
+        if (text) return { text, entryId: matches.map((m) => m.id).join(','), score: matches.length, topic: context.currentTopic || null };
+        return { text: fallback, entryId: null, score: 0, topic: context.currentTopic || null };
+      }
+
+      // 4. Generic portfolio facts (identity, education, interests, ...).
       let bestEntry = null;
       let bestScore = 0;
-
-      knowledge.entries.forEach((entry) => {
+      simpleEntries.forEach((entry) => {
         const score = scoreEntry(query, entry);
         if (score > bestScore) {
           bestScore = score;
@@ -747,17 +993,20 @@
       });
 
       if (bestEntry && bestScore >= TWIN_MATCH_THRESHOLD) {
-        return { text: bestEntry.answer, entryId: bestEntry.id, score: bestScore };
+        return { text: bestEntry.answer, entryId: bestEntry.id, score: bestScore, topic: context.currentTopic || null };
       }
 
       // Below threshold: the fallback always comes from knowledge.meta.fallback,
       // never a second hardcoded string.
-      return { text: knowledge.meta.fallback, entryId: null, score: bestScore };
+      return { text: fallback, entryId: null, score: bestScore, topic: context.currentTopic || null };
     }
 
     // Exposed for the test harness and any future reuse.
     if (typeof window !== 'undefined') {
-      window.TwinEngine = { normalizeQuery, scoreEntry, retrieveAnswer, TWIN_MATCH_THRESHOLD };
+      window.TwinEngine = {
+        normalizeQuery, scoreEntry, retrieveAnswer, TWIN_MATCH_THRESHOLD,
+        detectProjectEntities, detectIntent, getProjectEntries, getSimpleEntries,
+      };
     }
 
     function loadTwinKnowledge() {
@@ -802,8 +1051,12 @@
     }
 
     // Single answer path for BOTH chip clicks and free-text submissions.
+    // Keeps twinContext.currentTopic updated so a later "summarize it" can
+    // resolve "it" to the last project discussed.
     function generateTwinResponse(query) {
-      return retrieveAnswer(twinKnowledge, query).text;
+      const result = retrieveAnswer(twinKnowledge, query, twinContext);
+      twinContext.currentTopic = result.topic;
+      return result.text;
     }
 
     function handleTwinQuestion(question) {

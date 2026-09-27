@@ -74,8 +74,39 @@ if (!Array.isArray(data.entries)) {
       errors.push(`${where}.keywords must be a non-empty array of non-empty strings`);
     }
 
-    if (typeof entry.answer !== 'string' || entry.answer.trim() === '') {
-      errors.push(`${where}.answer must be a non-empty string`);
+    // An entry is either a simple fact (`answer`: string) or a structured
+    // project entry (`data`: object) — never both missing, never both empty.
+    const hasAnswer = typeof entry.answer === 'string' && entry.answer.trim() !== '';
+    const hasData = entry.data && typeof entry.data === 'object' && !Array.isArray(entry.data);
+
+    if (!hasAnswer && !hasData) {
+      errors.push(`${where} must have a non-empty "answer" string or a "data" object`);
+    }
+
+    if (hasData) {
+      const data = entry.data;
+      if (typeof data.name !== 'string' || data.name.trim() === '') {
+        errors.push(`${where}.data.name must be a non-empty string`);
+      }
+
+      const descriptiveStringFields = ['fullName', 'domain', 'summary', 'purpose', 'problem', 'implementation', 'outcome', 'role', 'builtWhen', 'status', 'githubUrl'];
+      descriptiveStringFields.forEach((field) => {
+        if (field in data && (typeof data[field] !== 'string' || data[field].trim() === '')) {
+          errors.push(`${where}.data.${field} must be a non-empty string when present`);
+        }
+      });
+
+      const descriptiveListFields = ['technologies', 'features'];
+      descriptiveListFields.forEach((field) => {
+        if (field in data && (!Array.isArray(data[field]) || data[field].length === 0 || !data[field].every((v) => typeof v === 'string' && v.trim() !== ''))) {
+          errors.push(`${where}.data.${field} must be a non-empty array of non-empty strings when present`);
+        }
+      });
+
+      const hasAnyDescriptiveContent = descriptiveStringFields.some((f) => f in data) || descriptiveListFields.some((f) => f in data);
+      if (!hasAnyDescriptiveContent) {
+        errors.push(`${where}.data must include at least one descriptive field (e.g. summary)`);
+      }
     }
   });
 }
